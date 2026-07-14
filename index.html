@@ -1,76 +1,232 @@
-<main class="container">
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <section class="hero">
+<title>유용한 계산기 모음</title>
 
-        <h2>유용한 계산 도구 모음</h2>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-        <p>
-            일상과 업무에 필요한 다양한 계산 도구를 제공합니다.
-            부동산을 비롯해 금융, 단위 변환 등 자주 사용하는 계산기를
-            한곳에서 편리하게 이용할 수 있습니다.
-        </p>
+<style>
 
-    </section>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
-    <section class="service-list">
+body{
 
-        <article class="service">
+    font-family:Pretendard,sans-serif;
+    background:#f5f6f4;
+    color:#222;
 
-            <h3>부동산 통합 계산기</h3>
+}
 
-            <p>
-                취득세, 보유세, 대출, 임대수익률 등
-                부동산 거래와 투자에 필요한 계산 기능을 제공합니다.
-            </p>
+.wrapper{
 
-            <a href="calculator.html" class="link">
-                바로가기 →
-            </a>
+    max-width:1100px;
+    margin:auto;
+    padding:70px 25px;
 
-        </article>
+}
 
-        <article class="service">
+.hero{
 
-            <h3>금융 계산기</h3>
+    margin-bottom:70px;
 
-            <p>
-                예금, 적금, 대출 등 금융 관련 계산 기능을 제공합니다.
-            </p>
+}
 
-            <a href="finance.html" class="link">
-                준비 중 →
-            </a>
+.hero h1{
 
-        </article>
+    font-size:42px;
+    margin-bottom:18px;
+    color:#274d3e;
 
-        <article class="service">
+}
 
-            <h3>단위 변환</h3>
+.hero p{
 
-            <p>
-                면적, 길이, 무게 등 다양한 단위를 쉽게 변환할 수 있습니다.
-            </p>
+    max-width:760px;
+    line-height:1.8;
+    color:#666;
+    font-size:18px;
 
-            <a href="convert.html" class="link">
-                준비 중 →
-            </a>
+}
 
-        </article>
+.grid{
 
-        <article class="service">
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:28px;
 
-            <h3>생활 계산기</h3>
+}
 
-            <p>
-                실생활에서 자주 사용하는 다양한 계산 도구를 제공합니다.
-            </p>
+.card{
 
-            <a href="life.html" class="link">
-                준비 중 →
-            </a>
+    background:white;
+    border:1px solid #dcdcdc;
+    border-radius:12px;
+    padding:32px;
+    transition:.2s;
 
-        </article>
+}
 
-    </section>
+.card:hover{
 
-</main>
+    border-color:#355a4a;
+    transform:translateY(-4px);
+
+}
+
+.card h2{
+
+    font-size:24px;
+    margin-bottom:15px;
+
+}
+
+.card p{
+
+    color:#666;
+    line-height:1.7;
+    min-height:95px;
+
+}
+
+.button{
+
+    display:inline-block;
+    margin-top:28px;
+    padding:12px 24px;
+
+    border:1px solid #355a4a;
+    color:#355a4a;
+
+    border-radius:8px;
+
+    text-decoration:none;
+
+    transition:.2s;
+
+}
+
+.button:hover{
+
+    background:#355a4a;
+    color:white;
+
+}
+
+footer{
+
+    margin-top:80px;
+    padding-top:30px;
+    border-top:1px solid #ddd;
+    color:#777;
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+<div class="hero">
+
+<h1>유용한 계산기 모음</h1>
+
+<p>
+
+일상과 업무에서 자주 사용하는 다양한 계산기를 제공합니다.
+필요한 계산을 쉽고 빠르게 이용할 수 있도록 지속적으로 서비스를 추가하고 있습니다.
+
+</p>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<h2>부동산 통합 계산기</h2>
+
+<p>
+
+부동산 거래와 투자 과정에서 필요한 계산 기능을
+하나의 서비스에서 제공합니다.
+
+</p>
+
+<a href="calculator.html" class="button">
+서비스 이용하기 →
+</a>
+
+</div>
+
+<div class="card">
+
+<h2>금융 계산기</h2>
+
+<p>
+
+예금, 적금, 복리, 대출 등 금융 관련 계산 서비스를
+준비하고 있습니다.
+
+</p>
+
+<a href="#" class="button">
+준비 중
+</a>
+
+</div>
+
+<div class="card">
+
+<h2>단위 변환</h2>
+
+<p>
+
+길이, 면적, 무게, 온도 등 다양한 단위를
+간편하게 변환할 수 있습니다.
+
+</p>
+
+<a href="#" class="button">
+준비 중
+</a>
+
+</div>
+
+<div class="card">
+
+<h2>생활 계산기</h2>
+
+<p>
+
+날짜 계산, 비율 계산 등
+일상생활에서 활용할 수 있는 계산기를 제공합니다.
+
+</p>
+
+<a href="#" class="button">
+준비 중
+</a>
+
+</div>
+
+</div>
+
+<footer>
+
+© 2026 Useful Calculator Collection
+
+</footer>
+
+</div>
+
+</body>
+</html>
