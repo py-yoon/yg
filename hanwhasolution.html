@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한화솔루션 확정 발행가액 및 청약대금 계산기</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 24px;
+            font-size: 22px;
+        }
+        .warning-box {
+            background-color: #e3f2fd;
+            color: #1565c0;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 1px solid #90caf9;
+            line-height: 1.5;
+        }
+        .form-group {
+            margin-bottom: 18px;
+            background-color: #fafafa;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        .form-group.highlight-group {
+            border-left: 4px solid #f37321;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        .sub-label {
+            font-size: 11px;
+            color: #888;
+            font-weight: normal;
+            display: block;
+            margin-bottom: 8px;
+            margin-top: -5px;
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        input:focus {
+            border-color: #f37321;
+            outline: none;
+        }
+        .btn-fetch {
+            padding: 10px 15px;
+            background-color: #555;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+        .btn-fetch:hover {
+            background-color: #333;
+        }
+        .status-msg {
+            font-size: 12px;
+            margin-top: 5px;
+            color: #007bff;
+            display: block;
+            min-height: 15px;
+        }
+        .btn-calc {
+            width: 100%;
+            padding: 14px;
+            margin-top: 10px;
+            background-color: #f37321;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-calc:hover {
+            background-color: #d65c11;
+        }
+        .result-box {
+            margin-top: 24px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        .result-box h3 {
+            margin-top: 0;
+            font-size: 16px;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            font-size: 15px;
+            color: #444;
+        }
+        .diff-text {
+            font-size: 13px;
+            color: #777;
+            text-align: right;
+            margin-top: -5px;
+            margin-bottom: 10px;
+        }
+        .highlight {
+            font-size: 18px;
+            font-weight: bold;
+            color: #d65c11;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #f37321;
+        }
+        .total-box {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #fff3e0;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px dashed #f37321;
+        }
+        .total-box span {
+            display: block;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        .total-box strong {
+            font-size: 22px;
+            color: #d65c11;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>유상증자 확정가액 & 청약대금 계산기</h2>
+    
+    <div class="warning-box">
+        ※ 2차 기준주가 규정 적용 완료<br>
+        <strong>기산일 종가</strong>와 <strong>과거 1주일 평균 종가</strong> 중<br>더 낮은 금액에 할인율(20%)이 적용됩니다.
+    </div>
+    
+    <div class="form-group">
+        <label for="price1">1차 발행가액 (확정) [단위: 원]</label>
+        <input type="number" id="price1" value="27900" disabled style="background-color: #eee; color: #555;">
+    </div>
+
+    <!-- 2차 기준주가 산정 그룹 -->
+    <div class="form-group highlight-group">
+        <label for="basePrice2_today">① 기산일(7/16) 종가 (현재가) [단위: 원]</label>
+        <div class="input-group">
+            <input type="number" id="basePrice2_today" placeholder="현재가 불러오기 또는 직접 입력">
+            <button class="btn-fetch" onclick="fetchCurrentPrice()">현재가 불러오기</button>
+        </div>
+        <span class="status-msg" id="fetchStatus"></span>
+
+        <label for="basePrice2_1wk" style="margin-top: 15px;">② 과거 1주일 평균 종가 [단위: 원]</label>
+        <span class="sub-label">* 1주일 가중산술평균주가를 직접 입력해주세요.</span>
+        <input type="number" id="basePrice2_1wk" placeholder="예: 25500">
+    </div>
+
+    <div class="form-group">
+        <label for="shareCount">청약 배정 주식수 (예정) [단위: 주]</label>
+        <input type="number" id="shareCount" placeholder="예: 100" value="100">
+    </div>
+
+    <button class="btn-calc" onclick="calculateFinalPrice()">결과 산출하기</button>
+
+    <div class="result-box" id="resultBox">
+        <h3>산출 결과 요약</h3>
+        <div class="result-item">
+            <span>1차 발행가액 (확정):</span>
+            <span>27,900 원</span>
+        </div>
+        <div class="result-item">
+            <span>적용된 2차 기준주가:</span>
+            <span id="resAppliedBase">0 원</span>
+        </div>
+        <div class="result-item">
+            <span>2차 발행가액 (예상):</span>
+            <span id="resPrice2">0 원</span>
+        </div>
+        <div class="diff-text" id="resDiff">
+            (가격을 입력하고 버튼을 눌러주세요)
+        </div>
+        <div class="result-item highlight">
+            <span>최종 발행가액 (확정):</span>
+            <span id="resFinal">0 원</span>
+        </div>
+        
+        <div class="total-box">
+            <span>유상증자 청약 필요 대금 (투입 금액)</span>
+            <strong id="resTotal">0 원</strong>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.addEventListener('DOMContentLoaded', fetchCurrentPrice);
+
+    async function fetchCurrentPrice() {
+        const inputField = document.getElementById('basePrice2_today');
+        const statusText = document.getElementById('fetchStatus');
+        
+        statusText.innerText = "현재가를 불러오는 중...";
+        statusText.style.color = "#007bff";
+
+        try {
+            const response = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/009830.KS');
+            if (!response.ok) throw new Error('야후 API 응답 오류');
+            
+            const data = await response.json();
+            const currentPrice = data.chart.result[0].meta.regularMarketPrice;
+            
+            if (currentPrice) {
+                inputField.value = currentPrice;
+                statusText.innerText = "현재가 불러오기 완료!";
+                statusText.style.color = "green";
+                // 1주일 평균이 입력되어 있으면 바로 계산
+                if(document.getElementById('basePrice2_1wk').value) {
+                    calculateFinalPrice(); 
+                }
+                return;
+            } else {
+                throw new Error('야후 가격 데이터 없음');
+            }
+        } catch (error) {
+            try {
+                const targetUrl = 'https://polling.finance.naver.com/api/realtime/domestic/stock/009830';
+                const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
+                
+                const res = await fetch(proxyUrl);
+                if (!res.ok) throw new Error('프록시 서버 응답 오류');
+                
+                const nData = await res.json();
+                const currentPriceText = nData.datas[0].closePrice;
+                const currentPrice = parseInt(currentPriceText.replace(/,/g, ''), 10);
+                
+                if (currentPrice) {
+                    inputField.value = currentPrice;
+                    statusText.innerText = "현재가 불러오기 완료! (우회 연결 성공)";
+                    statusText.style.color = "green";
+                    if(document.getElementById('basePrice2_1wk').value) {
+                        calculateFinalPrice(); 
+                    }
+                    return;
+                } else {
+                    throw new Error('네이버 가격 데이터 파싱 실패');
+                }
+            } catch (fallbackError) {
+                statusText.innerText = "현재가 자동 불러오기 실패. 수동으로 금액을 입력해주세요.";
+                statusText.style.color = "red";
+            }
+        }
+    }
+
+    function getTickSize(price) {
+        if (price < 2000) return 1;
+        if (price < 5000) return 5;
+        if (price < 20000) return 10;
+        if (price < 50000) return 50;
+        if (price < 200000) return 100;
+        if (price < 500000) return 500;
+        return 1000;
+    }
+
+    function calculateFinalPrice() {
+        const price1 = 27900; 
+        const basePrice2_today = parseFloat(document.getElementById('basePrice2_today').value);
+        const basePrice2_1wk = parseFloat(document.getElementById('basePrice2_1wk').value);
+        const shareCount = parseFloat(document.getElementById('shareCount').value);
+
+        if (isNaN(basePrice2_today) || basePrice2_today <= 0) {
+            return; 
+        }
+        if (isNaN(basePrice2_1wk) || basePrice2_1wk <= 0) {
+            alert("과거 1주일 평균 종가를 올바르게 입력해주세요.");
+            return;
+        }
+        if (isNaN(shareCount) || shareCount < 0) {
+            alert("청약 배정 주식 수를 올바르게 입력해주세요.");
+            return;
+        }
+
+        // 1. 당일 종가와 1주일 평균 종가 중 더 낮은 금액을 2차 기준주가로 결정
+        let finalBasePrice2 = Math.min(basePrice2_today, basePrice2_1wk);
+        
+        let applyText = finalBasePrice2 === basePrice2_today ? " (기산일 종가 적용)" : " (1주일 평균 적용)";
+
+        // 2. 2차 발행가액 산출 (할인율 20% 적용 후 호가 단위 절상)
+        let price2Raw = finalBasePrice2 * 0.8;
+        let tickSize = getTickSize(price2Raw);
+        let price2 = Math.ceil(price2Raw / tickSize) * tickSize;
+
+        // 3. 1차 발행가액 대비 2차 발행가액 차이 계산
+        let diffAmount = price1 - price2;
+        let diffPercent = ((diffAmount / price1) * 100).toFixed(1);
+        
+        let diffText = "";
+        if (diffAmount > 0) {
+            diffText = `(1차 대비 ${diffAmount.toLocaleString()}원 더 저렴 / ${diffPercent}% 추가 할인 적용)`;
+        } else if (diffAmount < 0) {
+            diffText = `(1차 가액이 ${Math.abs(diffAmount).toLocaleString()}원 더 저렴하여 1차 가액으로 확정됨)`;
+        } else {
+            diffText = "(1차 발행가액과 동일함)";
+        }
+
+        // 4. 최종 확정 발행가액 산출 (1차와 2차 중 낮은 금액 적용)
+        let finalPrice = Math.min(price1, price2);
+
+        // 5. 총 필요 대금(투입 금액) 계산
+        let totalAmount = finalPrice * shareCount;
+
+        // 결과 화면에 데이터 바인딩
+        document.getElementById('resAppliedBase').innerText = finalBasePrice2.toLocaleString() + " 원" + applyText;
+        document.getElementById('resPrice2').innerText = price2.toLocaleString() + " 원";
+        document.getElementById('resDiff').innerText = diffText;
+        
+        if (diffAmount < 0) {
+            document.getElementById('resDiff').style.color = "#777"; 
+        } else {
+            document.getElementById('resDiff').style.color = "#e53935"; 
+        }
+
+        document.getElementById('resFinal').innerText = finalPrice.toLocaleString() + " 원";
+        document.getElementById('resTotal').innerText = totalAmount.toLocaleString() + " 원";
+    }
+</script>
+
+</body>
+</html>
