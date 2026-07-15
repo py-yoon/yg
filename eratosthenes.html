@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>에라토스테네스의 체</title>
+<style>
+  :root {
+    --accent: #FF6A13;
+    --accent-dark: #E05A00;
+    --bg: #f7f7f9;
+    --card-bg: #ffffff;
+    --prime-color: #FF6A13;
+    --composite-color: #d9dbe1;
+    --composite-text: #b0b3bc;
+    --active-border: #dcdde3;
+    --text-main: #26272b;
+    --text-sub: #7a7d87;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Pretendard", "Malgun Gothic", sans-serif;
+    background: var(--bg);
+    color: var(--text-main);
+    padding: 24px 16px 60px;
+  }
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-size: 24px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  h1 .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+  }
+  p.subtitle {
+    color: var(--text-sub);
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+  .card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+  }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  .controls label {
+    font-size: 13px;
+    color: var(--text-sub);
+  }
+  .controls input[type="number"] {
+    width: 100px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--active-border);
+    font-size: 14px;
+  }
+  button {
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: transform 0.08s ease, background 0.15s ease;
+  }
+  button:active { transform: scale(0.96); }
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+  .btn-primary:hover { background: var(--accent-dark); }
+  .btn-secondary {
+    background: #eeeef1;
+    color: var(--text-main);
+  }
+  .btn-secondary:hover { background: #e2e2e6; }
+
+  .stats {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+    font-size: 13px;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .stat .value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-main);
+  }
+  .stat .value.accent { color: var(--accent); }
+  .stat .label { color: var(--text-sub); }
+
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #eee;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 14px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.2s ease;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(46px, 1fr));
+    gap: 6px;
+  }
+  .cell {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: var(--card-bg);
+    border: 1px solid var(--active-border);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-main);
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.15s ease;
+  }
+  .cell:hover:not(.composite):not(.prime):not(.one) {
+    border-color: var(--accent);
+    background: #fff4ea;
+  }
+  .cell.prime {
+    background: var(--prime-color);
+    color: white;
+    border-color: var(--prime-color);
+    cursor: default;
+  }
+  .cell.composite {
+    background: var(--composite-color);
+    color: var(--composite-text);
+    text-decoration: line-through;
+    border-color: var(--composite-color);
+    cursor: default;
+  }
+  .cell.one {
+    background: #f0f0f2;
+    color: #c3c5cc;
+    cursor: default;
+  }
+  .cell.shake {
+    animation: shake 0.3s ease;
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    75% { transform: translateX(3px); }
+  }
+  @keyframes popIn {
+    0% { transform: scale(0.7); opacity: 0.3; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .cell.justSet {
+    animation: popIn 0.25s ease;
+  }
+
+  .legend {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--text-sub);
+  }
+  .legend span { display: flex; align-items: center; gap: 6px; }
+  .swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
+  /* Completion modal */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(20,20,25,0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 16px;
+  }
+  .overlay.show { display: flex; }
+  .modal {
+    background: white;
+    border-radius: 18px;
+    padding: 32px 28px;
+    max-width: 380px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+    animation: popIn 0.3s ease;
+  }
+  .modal .emoji { font-size: 42px; margin-bottom: 8px; }
+  .modal h2 { margin: 4px 0 8px; font-size: 20px; }
+  .modal p { color: var(--text-sub); font-size: 14px; margin: 4px 0; }
+  .modal .big-num { font-size: 32px; font-weight: 800; color: var(--accent); margin: 10px 0; }
+  .modal button { margin-top: 18px; width: 100%; }
+
+  @media (max-width: 480px) {
+    .grid { grid-template-columns: repeat(auto-fill, minmax(38px, 1fr)); }
+    .cell { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1><span class="dot"></span>에라토스테네스의 체</h1>
+  <p class="subtitle">소수(素數)라고 생각하는 숫자를 클릭하세요. 그 숫자의 배수는 모두 자동으로 사라집니다.</p>
+
+  <div class="card">
+    <div class="controls">
+      <label>범위 (1 ~
+        <input type="number" id="rangeInput" value="1000" min="10" max="10000" step="10">
+        )
+      </label>
+      <button class="btn-primary" id="applyRange">적용</button>
+      <button class="btn-secondary" id="resetBtn">초기화</button>
+      <button class="btn-secondary" id="revealBtn">정답 자동 완성</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="value accent" id="primeCount">0</div>
+        <div class="label">찾은 소수</div>
+      </div>
+      <div class="stat">
+        <div class="value" id="remainingCount">0</div>
+        <div class="label">남은 숫자</div>
+      </div>
+      <div class="stat">
+        <div class="value" id="totalPrimes">-</div>
+        <div class="label">실제 소수 개수 (1~N)</div>
+      </div>
+    </div>
+
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+    <div class="legend">
+      <span><span class="swatch" style="background:var(--prime-color)"></span>소수로 지정됨</span>
+      <span><span class="swatch" style="background:var(--composite-color)"></span>배수(합성수)</span>
+      <span><span class="swatch" style="background:#f0f0f2"></span>1 (소수도 합성수도 아님)</span>
+      <span><span class="swatch" style="background:#ffffff;border:1px solid #dcdde3"></span>아직 미확인</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="grid" id="grid"></div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="emoji">🎉</div>
+    <h2>체 완성!</h2>
+    <p id="modalRangeText">1부터 1000까지</p>
+    <div class="big-num" id="modalPrimeCount">168</div>
+    <p>개의 소수를 모두 찾았습니다</p>
+    <button class="btn-primary" id="closeModal">다시 도전하기</button>
+  </div>
+</div>
+
+<script>
+let N = 1000;
+let state = []; // 0: unknown, 1: prime, 2: composite, 3: one
+let confirmedPrimes = new Set();
+
+const gridEl = document.getElementById('grid');
+const primeCountEl = document.getElementById('primeCount');
+const remainingCountEl = document.getElementById('remainingCount');
+const totalPrimesEl = document.getElementById('totalPrimes');
+const progressFill = document.getElementById('progressFill');
+const overlay = document.getElementById('overlay');
+const modalPrimeCount = document.getElementById('modalPrimeCount');
+const modalRangeText = document.getElementById('modalRangeText');
+
+function computeActualPrimes(n) {
+  const sieve = new Uint8Array(n + 1);
+  const primes = [];
+  for (let i = 2; i <= n; i++) {
+    if (!sieve[i]) {
+      primes.push(i);
+      for (let j = i * 2; j <= n; j += i) sieve[j] = 1;
+    }
+  }
+  return primes;
+}
+
+function buildGrid() {
+  state = new Array(N + 1).fill(0);
+  state[1] = 3; // "one"
+  confirmedPrimes = new Set();
+  gridEl.innerHTML = '';
+
+  const fragment = document.createDocumentFragment();
+  for (let i = 1; i <= N; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    cell.textContent = i;
+    cell.dataset.n = i;
+    if (i === 1) {
+      cell.classList.add('one');
+    } else {
+      cell.addEventListener('click', () => handleClick(i, cell));
+    }
+    fragment.appendChild(cell);
+  }
+  gridEl.appendChild(fragment);
+
+  totalPrimesEl.textContent = computeActualPrimes(N).length;
+  updateStats();
+}
+
+// confirmedPrimes 집합을 기준으로 전체 state를 다시 계산하고,
+// 바뀐 셀만 찾아서 DOM에 반영 (애니메이션은 바뀐 셀에만 적용)
+function recomputeAndRender(changedHint) {
+  const newState = new Array(N + 1).fill(0);
+  newState[1] = 3;
+  confirmedPrimes.forEach(p => { newState[p] = 1; });
+  confirmedPrimes.forEach(p => {
+    for (let m = p * 2; m <= N; m += p) {
+      if (newState[m] !== 1) newState[m] = 2;
+    }
+  });
+
+  for (let i = 2; i <= N; i++) {
+    if (newState[i] !== state[i]) {
+      const cell = gridEl.children[i - 1];
+      cell.classList.remove('prime', 'composite', 'justSet');
+      if (newState[i] === 1) {
+        cell.classList.add('prime');
+      } else if (newState[i] === 2) {
+        cell.classList.add('composite');
+      }
+      // 강제 리플로우 후 애니메이션 부여 (새로 확정되거나 되돌아온 셀 모두에 표시)
+      void cell.offsetWidth;
+      cell.classList.add('justSet');
+    }
+  }
+
+  state = newState;
+  updateStats();
+  checkCompletion();
+}
+
+function handleClick(n, cell) {
+  if (state[n] === 3) return; // "one"
+
+  if (confirmedPrimes.has(n)) {
+    // 이미 소수로 지정한 숫자 -> 다시 누르면 취소
+    confirmedPrimes.delete(n);
+    overlay.classList.remove('show');
+    recomputeAndRender();
+    return;
+  }
+
+  if (state[n] === 2) {
+    // 이미 배수로 지워진 숫자 -> 잘못된 클릭 피드백
+    cell.classList.remove('shake');
+    void cell.offsetWidth;
+    cell.classList.add('shake');
+    return;
+  }
+
+  // 아직 미확인 숫자 -> 소수로 지정
+  confirmedPrimes.add(n);
+  recomputeAndRender();
+}
+
+function updateStats() {
+  let remaining = 0;
+  for (let i = 1; i <= N; i++) {
+    if (state[i] === 0) remaining++;
+  }
+  primeCountEl.textContent = confirmedPrimes.size;
+  remainingCountEl.textContent = remaining;
+  const totalToSolve = N - 1;
+  const solvedCount = totalToSolve - remaining;
+  const pct = totalToSolve > 0 ? Math.round((solvedCount / totalToSolve) * 100) : 100;
+  progressFill.style.width = pct + '%';
+}
+
+function checkCompletion() {
+  for (let i = 2; i <= N; i++) {
+    if (state[i] === 0) return; // still unresolved numbers
+  }
+  modalPrimeCount.textContent = confirmedPrimes.size;
+  modalRangeText.textContent = `1부터 ${N}까지`;
+  setTimeout(() => overlay.classList.add('show'), 250);
+}
+
+function revealAll() {
+  const actualPrimes = computeActualPrimes(N);
+  actualPrimes.forEach(p => confirmedPrimes.add(p));
+  recomputeAndRender();
+}
+
+document.getElementById('applyRange').addEventListener('click', () => {
+  const input = document.getElementById('rangeInput');
+  let val = parseInt(input.value, 10);
+  if (isNaN(val) || val < 10) val = 10;
+  if (val > 10000) val = 10000;
+  input.value = val;
+  N = val;
+  overlay.classList.remove('show');
+  buildGrid();
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  overlay.classList.remove('show');
+  buildGrid();
+});
+
+document.getElementById('revealBtn').addEventListener('click', () => {
+  revealAll();
+});
+
+document.getElementById('closeModal').addEventListener('click', () => {
+  overlay.classList.remove('show');
+  buildGrid();
+});
+
+buildGrid();
+</script>
+
+</body>
+</html>
