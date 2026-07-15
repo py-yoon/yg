@@ -179,6 +179,16 @@
     25% { transform: translateX(-3px); }
     75% { transform: translateX(3px); }
   }
+  .cell.wrong {
+    animation: shakeRed 0.45s ease;
+  }
+  @keyframes shakeRed {
+    0%, 100% { transform: translateX(0); background: var(--card-bg); border-color: var(--active-border); }
+    15% { transform: translateX(-4px); background: #ffe1e1; border-color: #ff8a8a; }
+    35% { transform: translateX(4px); }
+    55% { transform: translateX(-3px); background: #ffe1e1; border-color: #ff8a8a; }
+    75% { transform: translateX(3px); }
+  }
   @keyframes popIn {
     0% { transform: scale(0.7); opacity: 0.3; }
     100% { transform: scale(1); opacity: 1; }
@@ -303,22 +313,31 @@ const overlay = document.getElementById('overlay');
 const modalPrimeCount = document.getElementById('modalPrimeCount');
 const modalRangeText = document.getElementById('modalRangeText');
 
-function computeActualPrimes(n) {
-  const sieve = new Uint8Array(n + 1);
-  const primes = [];
+let isPrimeArr = null; // 실제 소수 여부를 담은 배열 (index = 숫자)
+
+function computeIsPrimeArray(n) {
+  const notPrime = new Uint8Array(n + 1);
+  const isPrime = new Uint8Array(n + 1);
   for (let i = 2; i <= n; i++) {
-    if (!sieve[i]) {
-      primes.push(i);
-      for (let j = i * 2; j <= n; j += i) sieve[j] = 1;
+    if (!notPrime[i]) {
+      isPrime[i] = 1;
+      for (let j = i * 2; j <= n; j += i) notPrime[j] = 1;
     }
   }
-  return primes;
+  return isPrime;
+}
+
+function computeActualPrimeCount(n) {
+  let count = 0;
+  for (let i = 2; i <= n; i++) if (isPrimeArr[i]) count++;
+  return count;
 }
 
 function buildGrid() {
   state = new Array(N + 1).fill(0);
   state[1] = 3; // "one"
   confirmedPrimes = new Set();
+  isPrimeArr = computeIsPrimeArray(N);
   gridEl.innerHTML = '';
 
   const fragment = document.createDocumentFragment();
@@ -336,7 +355,7 @@ function buildGrid() {
   }
   gridEl.appendChild(fragment);
 
-  totalPrimesEl.textContent = computeActualPrimes(N).length;
+  totalPrimesEl.textContent = computeActualPrimeCount(N);
   updateStats();
 }
 
@@ -391,7 +410,16 @@ function handleClick(n, cell) {
     return;
   }
 
-  // 아직 미확인 숫자 -> 소수로 지정
+  // 아직 미확인 숫자 -> 실제로 소수인지 검증
+  if (!isPrimeArr[n]) {
+    // 합성수인데 아직 안 지워진 경우 (더 큰 수부터 거꾸로 누른 경우 등) -> "소수 아님" 피드백
+    cell.classList.remove('wrong');
+    void cell.offsetWidth;
+    cell.classList.add('wrong');
+    return;
+  }
+
+  // 진짜 소수 -> 소수로 지정
   confirmedPrimes.add(n);
   recomputeAndRender();
 }
@@ -419,8 +447,9 @@ function checkCompletion() {
 }
 
 function revealAll() {
-  const actualPrimes = computeActualPrimes(N);
-  actualPrimes.forEach(p => confirmedPrimes.add(p));
+  for (let i = 2; i <= N; i++) {
+    if (isPrimeArr[i]) confirmedPrimes.add(i);
+  }
   recomputeAndRender();
 }
 
