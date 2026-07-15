@@ -2,229 +2,236 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>유용한 계산기 모음</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YG Toolbox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css"></script>
 <style>
-
-*{
+  :root{
+    --paper:#faf7f2;
+    --card:#ffffff;
+    --ink:#1c2130;
+    --ink-soft:#565c6b;
+    --line:#e7e1d6;
+    --line-strong:#d8d0c1;
+    --orange:#ff6a13;
+    --orange-deep:#c9500a;
+    --orange-wash:#fff1e6;
+    --green:#1f7a4d;
+    --green-wash:#eaf6ef;
+    --navy:#12172a;
+  }
+  *{box-sizing:border-box;}
+  body{
     margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Pretendard', -apple-system, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .num{ font-family:'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; }
 
-body{
+  .wrap{ max-width:920px; margin:0 auto; padding:0 20px 90px; }
 
-    font-family:Pretendard,sans-serif;
-    background:#f5f6f4;
-    color:#222;
+  /* HEADER */
+  header{
+    padding:60px 0 40px;
+    border-bottom:1px solid var(--line);
+  }
+  .eyebrow{
+    display:flex; align-items:center; gap:10px;
+    font-size:13px; font-weight:600; color:var(--orange-deep);
+    letter-spacing:.02em; margin-bottom:18px;
+  }
+  .eyebrow .dot{ width:6px; height:6px; border-radius:50%; background:var(--orange); }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:40px;
+    line-height:1.2;
+    margin:0 0 14px;
+    letter-spacing:-.01em;
+  }
+  h1 span{ color:var(--orange-deep); }
+  .sub{
+    font-size:15.5px; color:var(--ink-soft); line-height:1.7; max-width:580px;
+  }
 
-}
+  .top-meta{
+    display:flex; gap:22px; margin-top:26px; flex-wrap:wrap;
+  }
+  .top-meta .m{ font-size:12.5px; color:var(--ink-soft); }
+  .top-meta .m b{ color:var(--ink); font-family:'IBM Plex Mono',monospace; font-weight:600;}
 
-.wrapper{
+  /* SEARCH-ish filter row (static labels) */
+  .filters{
+    display:flex; gap:8px; margin:32px 0 8px; flex-wrap:wrap;
+  }
+  .chip{
+    font-size:12.5px; font-weight:600; padding:6px 14px; border-radius:999px;
+    border:1px solid var(--line-strong); color:var(--ink-soft); background:#fff;
+  }
+  .chip.active{ background:var(--navy); border-color:var(--navy); color:#fff; }
 
-    max-width:1100px;
-    margin:auto;
-    padding:70px 25px;
-
-}
-
-.hero{
-
-    margin-bottom:70px;
-
-}
-
-.hero h1{
-
-    font-size:42px;
-    margin-bottom:18px;
-    color:#274d3e;
-
-}
-
-.hero p{
-
-    max-width:760px;
-    line-height:1.8;
-    color:#666;
-    font-size:18px;
-
-}
-
-.grid{
-
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-    gap:28px;
-
-}
-
-.card{
-
-    background:white;
-    border:1px solid #dcdcdc;
-    border-radius:12px;
-    padding:32px;
-    transition:.2s;
-
-}
-
-.card:hover{
-
-    border-color:#355a4a;
-    transform:translateY(-4px);
-
-}
-
-.card h2{
-
-    font-size:24px;
-    margin-bottom:15px;
-
-}
-
-.card p{
-
-    color:#666;
-    line-height:1.7;
-    min-height:95px;
-
-}
-
-.button{
-
-    display:inline-block;
-    margin-top:28px;
-    padding:12px 24px;
-
-    border:1px solid #355a4a;
-    color:#355a4a;
-
-    border-radius:8px;
-
+  /* GRID */
+  .grid{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-top:22px;
+  }
+  .card{
+    position:relative;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:26px;
     text-decoration:none;
+    color:var(--ink);
+    display:flex; flex-direction:column;
+    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    overflow:hidden;
+  }
+  .card::before{
+    content:"";
+    position:absolute; top:0; left:0; right:0; height:4px;
+    background:var(--accent, var(--orange));
+  }
+  .card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 14px 30px rgba(28,33,48,0.08);
+    border-color:var(--line-strong);
+  }
+  .card-top{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:18px; }
+  .card-icon{
+    width:42px; height:42px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--accent-wash, var(--orange-wash));
+    font-size:20px;
+  }
+  .card-status{
+    font-size:10.5px; font-weight:700; padding:3px 9px; border-radius:20px;
+    background:var(--green-wash); color:var(--green);
+    height:fit-content;
+  }
+  .card-tag{
+    font-size:11px; font-weight:700; color:var(--accent-deep, var(--orange-deep));
+    letter-spacing:.03em; margin-bottom:8px; text-transform:uppercase;
+  }
+  .card h2{
+    font-family:'Fraunces', serif; font-size:21px; font-weight:600; margin:0 0 10px;
+  }
+  .card p{
+    font-size:13.5px; color:var(--ink-soft); line-height:1.65; margin:0 0 20px; flex:1;
+  }
+  .card-foot{
+    display:flex; align-items:center; justify-content:space-between;
+    padding-top:16px; border-top:1px dashed var(--line);
+  }
+  .card-meta{ font-size:11.5px; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace; }
+  .card-cta{
+    font-size:13px; font-weight:700; color:var(--accent-deep, var(--orange-deep));
+    display:flex; align-items:center; gap:5px;
+  }
+  .card-cta .arrow{ transition:transform .15s ease; }
+  .card:hover .card-cta .arrow{ transform:translateX(3px); }
 
-    transition:.2s;
+  /* accent overrides per card */
+  .card.hanwha{ --accent:#ff6a13; --accent-wash:#fff1e6; --accent-deep:#c9500a; }
+  .card.realestate{ --accent:#1f7a4d; --accent-wash:#eaf6ef; --accent-deep:#155c3a; }
 
-}
+  /* placeholder / add-new card */
+  .card.placeholder{
+    align-items:center; justify-content:center; text-align:center;
+    border-style:dashed; color:var(--ink-soft); gap:8px; min-height:220px;
+  }
+  .card.placeholder::before{ display:none; }
+  .card.placeholder .plus{
+    width:36px; height:36px; border-radius:50%; border:1.5px dashed var(--line-strong);
+    display:flex; align-items:center; justify-content:center; font-size:18px; margin-bottom:6px;
+  }
 
-.button:hover{
+  footer{
+    margin-top:52px; padding-top:22px; border-top:1px solid var(--line);
+    font-size:12px; color:var(--ink-soft); line-height:1.7;
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
 
-    background:#355a4a;
-    color:white;
-
-}
-
-footer{
-
-    margin-top:80px;
-    padding-top:30px;
-    border-top:1px solid #ddd;
-    color:#777;
-
-}
-
+  @media (max-width:640px){
+    h1{ font-size:30px; }
+    .grid{ grid-template-columns:1fr; }
+  }
 </style>
 </head>
-
 <body>
 
-<div class="wrapper">
+<div class="wrap">
 
-<div class="hero">
+  <header>
+    <div class="eyebrow"><span class="dot"></span>YG · PERSONAL TOOLBOX</div>
+    <h1>실무에 바로 쓰는<br><span>계산기 & 도구</span> 모음</h1>
+    <p class="sub">
+      필요할 때마다 만들어 둔 실무용 계산기를 한곳에 모았습니다. 각 카드를 눌러 바로 사용하세요.
+    </p>
+    <div class="top-meta">
+      <div class="m">등록된 도구 <b>2</b>개</div>
+      <div class="m">최근 업데이트 <b>2026.07.15</b></div>
+    </div>
+  </header>
 
-<h1>유용한 계산기 모음</h1>
+  <div class="filters">
+    <div class="chip active">전체</div>
+    <div class="chip">금융 · 증권</div>
+    <div class="chip">부동산</div>
+  </div>
 
-<p>
+  <div class="grid">
 
-일상과 업무에서 자주 사용하는 다양한 계산기를 제공합니다.
-필요한 계산을 쉽고 빠르게 이용할 수 있도록 지속적으로 서비스를 추가하고 있습니다.
+    <a class="card hanwha" href="./hanwha_solutions" target="_blank" rel="noopener">
+      <div class="card-top">
+        <div class="card-icon">📈</div>
+        <div class="card-status">최신</div>
+      </div>
+      <div class="card-tag">금융 · 증권</div>
+      <h2>한화솔루션 유상증자<br>확정 발행가액 계산기</h2>
+      <p>
+        009830 유상증자의 1차·2차 발행가액을 비교해 최종 확정 발행가액과
+        예상 청약대금을 미리 계산합니다. 진행 일정 타임라인 포함.
+      </p>
+      <div class="card-foot">
+        <div class="card-meta">009830 · KRX</div>
+        <div class="card-cta">열기<span class="arrow">→</span></div>
+      </div>
+    </a>
 
-</p>
+    <a class="card realestate" href="./calculator.html" target="_blank" rel="noopener">
+      <div class="card-top">
+        <div class="card-icon">🏠</div>
+        <div class="card-status">최신</div>
+      </div>
+      <div class="card-tag">부동산</div>
+      <h2>부동산 통합 계산기</h2>
+      <p>
+        취득세·보유세·중개보수 같은 세금 계산부터 대출 상환·한도, 임대수익률,
+        전월세 전환, 갭투자 실투자금, 평↔㎡ 환산까지 한 페이지에서 처리합니다.
+      </p>
+      <div class="card-foot">
+        <div class="card-meta">2026.07 법령 기준</div>
+        <div class="card-cta">열기<span class="arrow">→</span></div>
+      </div>
+    </a>
 
-</div>
+    <div class="card placeholder">
+      <div class="plus">+</div>
+      <div style="font-size:13px; font-weight:600;">다음 도구는 여기에</div>
+      <div style="font-size:12px;">새 계산기를 추가하면 카드가 채워집니다</div>
+    </div>
 
-<div class="grid">
+  </div>
 
-<div class="card">
-
-<h2>부동산 통합 계산기</h2>
-
-<p>
-
-부동산 거래와 투자 과정에서 필요한 계산 기능을
-하나의 서비스에서 제공합니다.
-
-</p>
-
-<a href="calculator.html" class="button">
-서비스 이용하기 →
-</a>
-
-</div>
-
-<div class="card">
-
-<h2>금융 계산기</h2>
-
-<p>
-
-예금, 적금, 복리, 대출 등 금융 관련 계산 서비스를
-준비하고 있습니다.
-
-</p>
-
-<a href="#" class="button">
-준비 중
-</a>
-
-</div>
-
-<div class="card">
-
-<h2>단위 변환</h2>
-
-<p>
-
-길이, 면적, 무게, 온도 등 다양한 단위를
-간편하게 변환할 수 있습니다.
-
-</p>
-
-<a href="#" class="button">
-준비 중
-</a>
-
-</div>
-
-<div class="card">
-
-<h2>생활 계산기</h2>
-
-<p>
-
-날짜 계산, 비율 계산 등
-일상생활에서 활용할 수 있는 계산기를 제공합니다.
-
-</p>
-
-<a href="#" class="button">
-준비 중
-</a>
-
-</div>
-
-</div>
-
-<footer>
-
-© 2026 Useful Calculator Collection
-
-</footer>
+  <footer>
+    <div>개인용 도구 모음 · 투자 권유 목적이 아니며 실제 수치는 공시·법령 원문을 확인하세요.</div>
+    <div>py-yoon.github.io/yg</div>
+  </footer>
 
 </div>
 
