@@ -340,8 +340,10 @@
     statusText.innerText = "현재가 및 최근 1주일 평균을 조회하는 중...";
     statusText.className = "status wait";
 
+    const PROXY_URL = 'https://yahoo-finance-proxy.6h2lo.workers.dev';
+
     try {
-      const response = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/009830.KS');
+      const response = await fetch(`${PROXY_URL}?symbol=009830.KS`);
       if (!response.ok) throw new Error('Yahoo Finance 응답 오류');
 
       const data = await response.json();
