@@ -171,6 +171,8 @@
     background:var(--green); color:#fff; font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px;
   }
   .vs{ display:flex; align-items:center; justify-content:center; font-size:12px; color:var(--ink-soft); font-weight:700; width:24px;}
+  .pct-note{ font-size:11.5px; color:var(--ink-soft); margin-top:6px; font-family:'IBM Plex Mono',monospace; font-weight:600; }
+  .compare-col.win .pct-note{ color:var(--green); }
 
   .final-box{
     display:flex; justify-content:space-between; align-items:center;
@@ -222,33 +224,32 @@
   <section class="timeline-section">
     <div class="timeline-title">유상증자 진행 일정</div>
     <div class="timeline">
-      <div class="t-step done">
+      <div class="t-step" data-start="2026-06-11" data-end="2026-06-11">
         <div class="t-dot"></div>
         <div class="t-label">1차 발행가액<br>확정</div>
         <div class="t-date">06.11</div>
       </div>
-      <div class="t-step today">
+      <div class="t-step" data-start="2026-07-16" data-end="2026-07-16">
         <div class="t-dot"></div>
         <div class="t-label">최종(2차)<br>발행가액 산정</div>
         <div class="t-date">07.16</div>
-        <div class="today-flag">D-1 · 오늘 07.15</div>
       </div>
-      <div class="t-step">
+      <div class="t-step" data-start="2026-07-22" data-end="2026-07-23">
         <div class="t-dot"></div>
         <div class="t-label">구주주<br>청약</div>
         <div class="t-date">07.22–23</div>
       </div>
-      <div class="t-step">
+      <div class="t-step" data-start="2026-07-27" data-end="2026-07-28">
         <div class="t-dot"></div>
         <div class="t-label">일반공모<br>청약</div>
         <div class="t-date">07.27–28</div>
       </div>
-      <div class="t-step">
+      <div class="t-step" data-start="2026-07-30" data-end="2026-07-30">
         <div class="t-dot"></div>
         <div class="t-label">주금<br>납입</div>
         <div class="t-date">07.30</div>
       </div>
-      <div class="t-step">
+      <div class="t-step" data-start="2026-08-11" data-end="2026-08-11">
         <div class="t-dot"></div>
         <div class="t-label">신주<br>상장</div>
         <div class="t-date">08.11</div>
@@ -260,7 +261,7 @@
     <div class="stat"><div class="k">1차 발행가액 (확정)</div><div class="v">27,900<small> 원</small></div></div>
     <div class="stat"><div class="k">할인율</div><div class="v">20<small>%</small></div></div>
     <div class="stat"><div class="k">신주 발행수</div><div class="v">5,300<small>만주</small></div></div>
-    <div class="stat"><div class="k">조달 규모</div><div class="v">약 1.7<small>조원</small></div></div>
+    <div class="stat"><div class="k">조달 규모</div><div class="v" id="statRaiseAmount">약 1.7<small>조원</small></div></div>
   </section>
 
   <section class="panel">
@@ -301,7 +302,7 @@
       <div class="compare">
         <div class="compare-col" id="col1"><div class="lab">1차 발행가액</div><div class="amt">27,900 원</div></div>
         <div class="vs">vs</div>
-        <div class="compare-col" id="col2"><div class="lab">2차(최종) 예상가</div><div class="amt" id="resPrice2">— 원</div></div>
+        <div class="compare-col" id="col2"><div class="lab">2차(최종) 예상가</div><div class="amt" id="resPrice2">— 원</div><div class="pct-note" id="resPct2"></div></div>
       </div>
 
       <div class="final-box">
@@ -315,6 +316,11 @@
       <div class="total-box">
         <div class="lab">예상 청약 필요 대금</div>
         <div class="amt" id="resTotal">— 원</div>
+      </div>
+
+      <div class="total-box" style="margin-top:16px; border-color:var(--navy); background:#eef0f7;">
+        <div class="lab" style="color:var(--navy);">한화솔루션 총 조달금액 (신주 5,300만주 기준, 예상)</div>
+        <div class="amt" style="color:var(--navy);" id="resCompanyTotal">— 원</div>
       </div>
     </div>
   </section>
@@ -330,7 +336,65 @@
 </div>
 
 <script>
-  window.addEventListener('DOMContentLoaded', fetchCurrentPrice);
+  window.addEventListener('DOMContentLoaded', () => {
+    initTimeline();
+    fetchCurrentPrice();
+  });
+
+  function initTimeline() {
+    const steps = Array.from(document.querySelectorAll('.t-step'));
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const fmt = d => `${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+    const addFlag = (step, text) => {
+      const el = document.createElement('div');
+      el.className = 'today-flag';
+      el.innerText = text;
+      step.appendChild(el);
+    };
+
+    const parsed = steps.map(step => ({
+      step,
+      start: new Date(step.dataset.start + 'T00:00:00'),
+      end: new Date((step.dataset.end || step.dataset.start) + 'T00:00:00'),
+    }));
+
+    parsed.forEach(({ step }) => {
+      step.classList.remove('done', 'today');
+      step.querySelector('.today-flag')?.remove();
+    });
+
+    const activeIdx = parsed.findIndex(p => today >= p.start && today <= p.end);
+
+    if (activeIdx !== -1) {
+      parsed.forEach((p, i) => {
+        if (i < activeIdx) p.step.classList.add('done');
+        if (i === activeIdx) {
+          p.step.classList.add('today');
+          addFlag(p.step, `D-DAY · 오늘 ${fmt(today)}`);
+        }
+      });
+    } else {
+      parsed.forEach(p => {
+        if (p.end < today) p.step.classList.add('done');
+      });
+      const nextIdx = parsed.findIndex(p => today < p.start);
+      if (nextIdx !== -1) {
+        const diffDays = Math.round((parsed[nextIdx].start - today) / 86400000);
+        parsed[nextIdx].step.classList.add('today');
+        addFlag(parsed[nextIdx].step, `D-${diffDays} · 오늘 ${fmt(today)}`);
+      }
+    }
+  }
+
+  function formatWon(amount) {
+    const jo = Math.floor(amount / 1e12);
+    const eok = Math.floor((amount % 1e12) / 1e8);
+    if (jo > 0) return `${jo}조 ${eok.toLocaleString()}억원`;
+    if (eok > 0) return `${eok.toLocaleString()}억원`;
+    return `${Math.round(amount).toLocaleString()}원`;
+  }
 
   async function fetchCurrentPrice() {
     const inputField = document.getElementById('basePrice2_today');
@@ -413,8 +477,18 @@
     const finalPrice = Math.min(price1, price2);
     const totalAmount = finalPrice * shareCount;
     const diff = price1 - price2;
+    const pctDiff = (diff / price1) * 100;
 
     document.getElementById('resPrice2').innerText = price2.toLocaleString() + " 원";
+
+    const pctNote = document.getElementById('resPct2');
+    if (pctDiff > 0) {
+      pctNote.innerText = `1차 대비 ${pctDiff.toFixed(1)}% 할인`;
+    } else if (pctDiff < 0) {
+      pctNote.innerText = `1차 대비 ${Math.abs(pctDiff).toFixed(1)}% 높음`;
+    } else {
+      pctNote.innerText = `1차와 동일`;
+    }
 
     const col1 = document.getElementById('col1');
     const col2 = document.getElementById('col2');
@@ -425,11 +499,11 @@
     if (diff > 0) {
       col2.classList.add('win');
       col2.insertAdjacentHTML('afterbegin', '<div class="badge">최종 적용</div>');
-      diffText = `2차 예상가가 1차보다 ${diff.toLocaleString()}원 낮아, 2차가 최종 발행가액으로 적용됩니다.`;
+      diffText = `2차 예상가가 1차보다 ${diff.toLocaleString()}원(${pctDiff.toFixed(1)}%) 낮아, 2차가 최종 발행가액으로 적용됩니다.`;
     } else if (diff < 0) {
       col1.classList.add('win');
       col1.insertAdjacentHTML('afterbegin', '<div class="badge">최종 적용</div>');
-      diffText = `1차 발행가액이 2차 예상가보다 ${Math.abs(diff).toLocaleString()}원 낮아, 1차가 최종 발행가액으로 유지됩니다.`;
+      diffText = `1차 발행가액이 2차 예상가보다 ${Math.abs(diff).toLocaleString()}원(${Math.abs(pctDiff).toFixed(1)}%) 낮아, 1차가 최종 발행가액으로 유지됩니다.`;
     } else {
       diffText = "1차와 2차 예상가가 동일합니다.";
     }
@@ -437,6 +511,14 @@
     document.getElementById('resDiff').innerText = diffText;
     document.getElementById('resFinal').innerText = finalPrice.toLocaleString() + " 원";
     document.getElementById('resTotal').innerText = totalAmount.toLocaleString() + " 원";
+
+    const totalIssuedShares = 53000000; // 신주 발행수 5,300만주
+    const companyTotal = finalPrice * totalIssuedShares;
+    document.getElementById('resCompanyTotal').innerText =
+      `${formatWon(companyTotal)} (${companyTotal.toLocaleString()}원)`;
+
+    const statRaise = document.getElementById('statRaiseAmount');
+    if (statRaise) statRaise.innerText = formatWon(companyTotal) + " 예상";
   }
 </script>
 
