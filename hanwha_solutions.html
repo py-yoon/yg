@@ -261,7 +261,7 @@
     <div class="stat"><div class="k">1차 발행가액 (확정)</div><div class="v">27,900<small> 원</small></div></div>
     <div class="stat"><div class="k">할인율</div><div class="v">20<small>%</small></div></div>
     <div class="stat"><div class="k">신주 발행수</div><div class="v">5,300<small>만주</small></div></div>
-    <div class="stat"><div class="k">조달 규모</div><div class="v" id="statRaiseAmount">약 1.7<small>조원</small></div></div>
+    <div class="stat"><div class="k">조달 규모 (1차 발행가액 기준)</div><div class="v" id="statRaiseAmount">1조 4,787<small>억원</small></div></div>
   </section>
 
   <section class="panel">
@@ -319,7 +319,7 @@
       </div>
 
       <div class="total-box" style="margin-top:16px; border-color:var(--navy); background:#eef0f7;">
-        <div class="lab" style="color:var(--navy);">한화솔루션 총 조달금액 (신주 5,300만주 기준, 예상)</div>
+        <div class="lab" style="color:var(--navy);">한화솔루션 총 조달금액 (최종 발행가액 × 5,300만주, 예상)</div>
         <div class="amt" style="color:var(--navy);" id="resCompanyTotal">— 원</div>
       </div>
     </div>
@@ -516,9 +516,6 @@
     const companyTotal = finalPrice * totalIssuedShares;
     document.getElementById('resCompanyTotal').innerText =
       `${formatWon(companyTotal)} (${companyTotal.toLocaleString()}원)`;
-
-    const statRaise = document.getElementById('statRaiseAmount');
-    if (statRaise) statRaise.innerText = formatWon(companyTotal) + " 예상";
   }
 </script>
 
