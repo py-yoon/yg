@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SK하이닉스 — 국내 vs ADR 실시간 비교</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css" />
+<style>
+  :root{
+    --bg:#FFFFFF;
+    --bg-soft:#F7F8FA;
+    --ink:#111318;
+    --ink-soft:#5B5F6B;
+    --ink-faint:#9599A3;
+    --line:#E9EAEE;
+    --blue:#2954E8;
+    --blue-soft:#EEF2FE;
+    --red:#E0342A;
+    --green:#1A8B4C;
+    --gold:#B8862E;
+    --shadow: 0 1px 2px rgba(17,19,24,0.04), 0 8px 24px rgba(17,19,24,0.05);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Pretendard Variable','Pretendard',-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{ max-width:980px; margin:0 auto; padding: 28px 20px 60px; }
+
+  /* ===== Header ===== */
+  header{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    padding-bottom:22px; border-bottom:1px solid var(--line); margin-bottom:26px;
+  }
+  .brand-eyebrow{
+    font-size:12px; font-weight:700; letter-spacing:.08em; color:var(--blue);
+    text-transform:uppercase; margin-bottom:6px;
+  }
+  h1{ font-size:26px; font-weight:800; margin:0 0 4px; letter-spacing:-0.01em; }
+  .sub{ font-size:13.5px; color:var(--ink-soft); }
+  .status{
+    text-align:right; font-size:12.5px; color:var(--ink-faint);
+    display:flex; flex-direction:column; align-items:flex-end; gap:6px;
+  }
+  .status .dot-row{ display:flex; align-items:center; gap:6px; }
+  .dot{ width:7px; height:7px; border-radius:50%; background:var(--ink-faint); }
+  .dot.live{ background:var(--green); box-shadow:0 0 0 3px rgba(26,139,76,0.15); animation:pulse 1.8s infinite; }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.45;} }
+
+  /* ===== Refresh bar ===== */
+  .refresh-bar{
+    display:flex; align-items:center; justify-content:flex-end; gap:10px; margin-bottom:18px;
+  }
+  .refresh-btn{
+    font-family:inherit; font-size:12.5px; font-weight:600; color:var(--blue);
+    background:var(--blue-soft); border:1px solid transparent; border-radius:8px;
+    padding:7px 13px; cursor:pointer; transition:all .15s;
+  }
+  .refresh-btn:hover{ background:#E2E9FD; }
+  .refresh-btn:disabled{ opacity:.5; cursor:default; }
+
+  /* ===== Cards grid ===== */
+  .grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;
+  }
+  @media (max-width:700px){ .grid{ grid-template-columns:1fr; } }
+
+  .card{
+    background:var(--bg); border:1px solid var(--line); border-radius:16px;
+    padding:22px; box-shadow:var(--shadow); position:relative; overflow:hidden;
+  }
+  .card-tag{
+    font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+    padding:3px 9px; border-radius:20px; display:inline-block; margin-bottom:14px;
+  }
+  .tag-domestic{ background:#EAF2FF; color:#1B54D6; }
+  .tag-adr{ background:#FBEFE3; color:var(--gold); }
+
+  .card-name{ font-size:14.5px; font-weight:600; color:var(--ink-soft); margin-bottom:2px; }
+  .card-symbol{ font-size:12px; color:var(--ink-faint); margin-bottom:16px; font-variant-numeric:tabular-nums; }
+
+  .price-row{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
+  .price{ font-size:34px; font-weight:800; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; }
+  .price .skel{ display:inline-block; width:120px; height:30px; background:var(--bg-soft); border-radius:6px; }
+  .change{
+    font-size:14.5px; font-weight:700; padding:3px 9px; border-radius:8px;
+    font-variant-numeric:tabular-nums;
+  }
+  .change.up{ color:var(--red); background:#FDECEC; }
+  .change.down{ color:var(--blue); background:var(--blue-soft); }
+  .change.flat{ color:var(--ink-faint); background:var(--bg-soft); }
+
+  .krw-equiv{ font-size:13px; color:var(--ink-soft); margin-top:2px; }
+  .krw-equiv b{ color:var(--ink); font-weight:700; }
+
+  .card-foot{
+    margin-top:16px; padding-top:14px; border-top:1px dashed var(--line);
+    display:flex; justify-content:space-between; font-size:12px; color:var(--ink-faint);
+  }
+
+  /* ===== Comparison summary card ===== */
+  .compare-card{
+    background:linear-gradient(180deg,#FAFBFF, #FFFFFF);
+    border:1px solid var(--line); border-radius:16px; padding:24px;
+    box-shadow:var(--shadow); margin-bottom:16px;
+  }
+  .compare-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+  .compare-title{ font-size:15px; font-weight:700; }
+  .fx-badge{
+    font-size:12.5px; color:var(--ink-soft); background:var(--bg-soft);
+    border:1px solid var(--line); border-radius:20px; padding:5px 12px;
+    font-variant-numeric:tabular-nums;
+  }
+  .fx-badge b{ color:var(--ink); }
+
+  .premium-display{ display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+  .premium-num{ font-size:42px; font-weight:800; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; }
+  .premium-num.pos{ color:var(--red); }
+  .premium-num.neg{ color:var(--blue); }
+  .premium-desc{ font-size:13.5px; color:var(--ink-soft); line-height:1.55; max-width:420px; }
+  .premium-desc b{ color:var(--ink); }
+
+  .bar-wrap{ margin-top:22px; }
+  .bar-track{ height:10px; background:var(--bg-soft); border-radius:99px; position:relative; }
+  .bar-center-tick{
+    position:absolute; left:50%; top:-4px; width:2px; height:18px;
+    background:var(--ink-faint); border-radius:2px; transform:translateX(-50%);
+  }
+  .bar-fill{ position:absolute; top:0; height:100%; border-radius:99px; transition: all .4s ease; }
+  .bar-labels{ display:flex; justify-content:space-between; font-size:11.5px; color:var(--ink-faint); margin-top:8px; }
+
+  /* ===== Footer ===== */
+  footer{
+    margin-top:30px; padding-top:18px; border-top:1px solid var(--line);
+    font-size:11.5px; color:var(--ink-faint); line-height:1.7;
+  }
+
+  .ratio-note{
+    font-size:12.5px; color:var(--ink-soft); background:var(--bg-soft);
+    border:1px solid var(--line); border-radius:10px; padding:10px 14px; margin-bottom:16px;
+  }
+  .ratio-note b{ color:var(--ink); }
+
+  .stat-row{
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-size:13px; color:var(--ink-soft); padding:8px 0; border-bottom:1px dashed var(--line);
+  }
+  .stat-row:last-child{ border-bottom:none; }
+  .stat-row b{ color:var(--ink); font-weight:700; font-variant-numeric:tabular-nums; }
+  .stat-row small{ display:block; color:var(--ink-faint); font-size:11px; margin-top:2px; }
+
+  .error-box{
+    background:#FDECEC; border:1px solid #F6C6C2; color:#9A2A22;
+    border-radius:10px; padding:10px 14px; font-size:12.5px; margin-bottom:14px; display:none;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <div class="brand-eyebrow">Live Market Dashboard</div>
+      <h1>SK하이닉스 — 국내 vs ADR</h1>
+      <div class="sub">KRX 000660 실시간 주가와 Nasdaq ADR(SKHY)을 환율 기준으로 비교합니다</div>
+    </div>
+    <div class="status">
+      <div class="dot-row"><span class="dot live" id="liveDot"></span><span id="statusText">연결 중…</span></div>
+      <div id="lastUpdated">—</div>
+    </div>
+  </header>
+
+  <div class="error-box" id="errorBox"></div>
+
+  <div class="refresh-bar">
+    <button class="refresh-btn" id="refreshBtn" onclick="refreshAll()">↻ 지금 새로고침</button>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <span class="card-tag tag-domestic">KRX 국내</span>
+      <div class="card-name">SK하이닉스 (KRX)</div>
+      <div class="card-symbol">000660.KS · KRW</div>
+      <div class="price-row">
+        <span class="price" id="krPrice"><span class="skel"></span></span>
+        <span class="change flat" id="krChange">—</span>
+      </div>
+      <div class="card-foot">
+        <span>전일종가 <span id="krPrevClose">—</span></span>
+        <span id="krTime">—</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="card-tag tag-adr">Nasdaq ADR</span>
+      <div class="card-name">SK hynix Inc. ADR</div>
+      <div class="card-symbol">SKHY · USD</div>
+      <div class="price-row">
+        <span class="price" id="adrPrice"><span class="skel"></span></span>
+        <span class="change flat" id="adrChange">—</span>
+      </div>
+      <div class="krw-equiv">ADR 1주 원화환산 <b id="adrKrwPerAdr">—</b></div>
+      <div class="krw-equiv">보통주 1주 환산가 (ADR×10) <b id="adrKrwEquiv">—</b></div>
+      <div class="card-foot">
+        <span>전일종가 <span id="adrPrevClose">—</span></span>
+        <span id="adrTime">—</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ratio-note">
+    환산 비율 — 국내 보통주 <b>1주</b> = ADR <b id="ratioText">10주</b> (SK하이닉스 예탁비율 기준)
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <span class="card-tag tag-domestic">거래 규모 · 국내</span>
+      <div class="stat-row">
+        <span>거래량 (당일)</span>
+        <b id="krVolume">—</b>
+      </div>
+      <div class="stat-row">
+        <span>발행주식수<small>상장 공시 기준 참고치</small></span>
+        <b>약 7억 2,887만주</b>
+      </div>
+    </div>
+    <div class="card">
+      <span class="card-tag tag-adr">거래 규모 · ADR</span>
+      <div class="stat-row">
+        <span>거래량 (당일)</span>
+        <b id="adrVolume">—</b>
+      </div>
+      <div class="stat-row">
+        <span>ADR 유통물량<small>Nasdaq 상장 초기 공시 기준</small></span>
+        <b>발행한도의 약 2.5%</b>
+      </div>
+    </div>
+  </div>
+  <div class="ratio-note">
+    거래량은 Yahoo Finance 실시간 데이터입니다. 발행주식수·ADR 유통물량은 상장 시점 공시 자료 기준 참고치로, 실시간으로 갱신되지 않습니다.
+  </div>
+
+  <div class="compare-card">
+    <div class="compare-head">
+      <div class="compare-title">ADR 프리미엄 / 디스카운트</div>
+      <div class="fx-badge">USD/KRW <b id="fxRate">—</b></div>
+    </div>
+    <div class="premium-display">
+      <div class="premium-num flat" id="premiumNum">—</div>
+      <div class="premium-desc">
+        ADR 10주를 보통주 1주로 환산한 원화 가격이 국내 주가 대비 <b id="premiumWord">몇 %</b> <span id="premiumDirWord">높은지/낮은지</span>를 나타냅니다.
+        (SK하이닉스는 <b>ADR 10주 = 보통주 1주</b> 비율로 예탁되어 있습니다)
+      </div>
+    </div>
+    <div class="bar-wrap">
+      <div class="bar-track">
+        <div class="bar-center-tick"></div>
+        <div class="bar-fill" id="premiumBar" style="left:50%; width:0%; background:var(--ink-faint);"></div>
+      </div>
+      <div class="bar-labels"><span>디스카운트 −50%</span><span>동일가</span><span>프리미엄 +50%</span></div>
+    </div>
+  </div>
+
+  <footer>
+    자동 새로고침: 20초 간격 · 데이터 출처: Yahoo Finance (Cloudflare Worker 프록시 경유)<br>
+    ADR 10주 = 국내 보통주 1주 기준으로 환산합니다. 실제 예탁비율 및 수수료는 변동될 수 있습니다.<br>
+    본 페이지는 정보 제공 목적이며 투자 판단의 근거가 될 수 없습니다.
+  </footer>
+
+</div>
+
+<script>
+const PROXY = "https://hynix-proxy.6h2lo.workers.dev/";
+const SYM_KR = "000660.KS";
+const SYM_ADR = "SKHY";
+const SYM_FX = "KRW=X";
+const REFRESH_MS = 20000;
+const ADR_PER_SHARE = 10; // SK하이닉스: ADR 10주 = 국내 보통주 1주
+
+let lastFx = null;
+let timerId = null;
+
+const fmtNum = (n, d=0) => n == null || isNaN(n) ? "—" : n.toLocaleString("ko-KR", {minimumFractionDigits:d, maximumFractionDigits:d});
+const fmtPct = (n) => n == null || isNaN(n) ? "—" : (n>=0? "+":"") + n.toFixed(2) + "%";
+
+async function fetchQuote(symbol){
+  const url = `${PROXY}?symbol=${encodeURIComponent(symbol)}`;
+  const res = await fetch(url, { cache: "no-store" });
+  if(!res.ok) throw new Error(`요청 실패 (${symbol}): ${res.status}`);
+  const data = await res.json();
+  const result = data?.chart?.result?.[0];
+  if(!result) throw new Error(`데이터 없음 (${symbol})`);
+  const meta = result.meta;
+  return {
+    price: meta.regularMarketPrice,
+    prevClose: meta.chartPreviousClose ?? meta.previousClose,
+    currency: meta.currency,
+    volume: meta.regularMarketVolume ?? null,
+    time: meta.regularMarketTime ? new Date(meta.regularMarketTime * 1000) : new Date()
+  };
+}
+
+function setChangeEl(el, price, prevClose){
+  if(price == null || prevClose == null){ el.textContent = "—"; el.className = "change flat"; return; }
+  const diff = price - prevClose;
+  const pct = (diff / prevClose) * 100;
+  el.textContent = `${diff>=0?"+":""}${fmtNum(diff,0)} (${fmtPct(pct)})`;
+  el.className = "change " + (diff > 0 ? "up" : diff < 0 ? "down" : "flat");
+}
+
+function timeLabel(d){
+  return d.toLocaleTimeString("ko-KR", { hour:"2-digit", minute:"2-digit", second:"2-digit" });
+}
+
+async function refreshAll(){
+  const btn = document.getElementById("refreshBtn");
+  const errorBox = document.getElementById("errorBox");
+  btn.disabled = true;
+  errorBox.style.display = "none";
+  document.getElementById("statusText").textContent = "업데이트 중…";
+
+  try{
+    const [kr, adr, fx] = await Promise.all([
+      fetchQuote(SYM_KR),
+      fetchQuote(SYM_ADR),
+      fetchQuote(SYM_FX)
+    ]);
+
+    lastFx = fx.price;
+
+    // 국내
+    document.getElementById("krPrice").textContent = fmtNum(kr.price, 0) + "원";
+    setChangeEl(document.getElementById("krChange"), kr.price, kr.prevClose);
+    document.getElementById("krPrevClose").textContent = fmtNum(kr.prevClose,0) + "원";
+    document.getElementById("krTime").textContent = timeLabel(kr.time);
+
+    // ADR
+    document.getElementById("adrPrice").textContent = "$" + fmtNum(adr.price, 2);
+    setChangeEl(document.getElementById("adrChange"), adr.price, adr.prevClose);
+    document.getElementById("adrPrevClose").textContent = "$" + fmtNum(adr.prevClose,2);
+    document.getElementById("adrTime").textContent = timeLabel(adr.time);
+
+    // 거래량
+    document.getElementById("krVolume").textContent = kr.volume != null ? fmtNum(kr.volume,0) + "주" : "정보 없음";
+    document.getElementById("adrVolume").textContent = adr.volume != null ? fmtNum(adr.volume,0) + "주" : "정보 없음";
+
+    const adrKrwPerAdr = adr.price * fx.price;              // ADR 1주를 원화로 환산한 값
+    const adrKrwPerShare = adrKrwPerAdr * ADR_PER_SHARE;     // 보통주 1주에 해당하는 환산가 (ADR 10주 기준)
+    document.getElementById("adrKrwPerAdr").textContent = fmtNum(adrKrwPerAdr, 0) + "원";
+    document.getElementById("adrKrwEquiv").textContent = fmtNum(adrKrwPerShare, 0) + "원";
+    document.getElementById("ratioText").textContent = ADR_PER_SHARE + "주";
+
+    // FX
+    document.getElementById("fxRate").textContent = fmtNum(fx.price, 2) + "원";
+
+    // Premium calc (보통주 1주 기준으로 비교)
+    if(kr.price){
+      const premiumPct = ((adrKrwPerShare - kr.price) / kr.price) * 100;
+      const premiumNumEl = document.getElementById("premiumNum");
+      premiumNumEl.textContent = fmtPct(premiumPct);
+      premiumNumEl.className = "premium-num " + (premiumPct > 0 ? "pos" : premiumPct < 0 ? "neg" : "");
+
+      document.getElementById("premiumWord").textContent = Math.abs(premiumPct).toFixed(2) + "%";
+      document.getElementById("premiumDirWord").textContent = premiumPct >= 0 ? "높은지" : "낮은지";
+
+      const clamped = Math.max(-50, Math.min(50, premiumPct));
+      const halfWidthPct = (Math.abs(clamped) / 50) * 50; // 컨테이너 절반(50%)을 최대치로 사용
+      const bar = document.getElementById("premiumBar");
+      bar.style.width = halfWidthPct + "%";
+      if(clamped >= 0){
+        bar.style.left = "50%";
+        bar.style.right = "auto";
+      } else {
+        bar.style.right = "50%";
+        bar.style.left = "auto";
+      }
+      bar.style.background = premiumPct > 0.05 ? "var(--red)" : premiumPct < -0.05 ? "var(--blue)" : "var(--ink-faint)";
+    }
+
+    document.getElementById("lastUpdated").textContent = "마지막 갱신 " + timeLabel(new Date());
+    document.getElementById("statusText").textContent = "실시간 연결됨";
+    document.getElementById("liveDot").classList.add("live");
+
+  } catch(err){
+    console.error(err);
+    errorBox.textContent = "데이터를 불러오지 못했습니다: " + err.message + " (잠시 후 자동 재시도합니다)";
+    errorBox.style.display = "block";
+    document.getElementById("statusText").textContent = "연결 오류";
+    document.getElementById("liveDot").classList.remove("live");
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function startAutoRefresh(){
+  if(timerId) clearInterval(timerId);
+  timerId = setInterval(refreshAll, REFRESH_MS);
+}
+
+refreshAll();
+startAutoRefresh();
+</script>
+</body>
+</html>
