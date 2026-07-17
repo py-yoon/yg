@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이글스 타임즈 — 39년의 비행, 1부: 시대의 서사</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;700;900&family=Nanum+Myeongjo:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css" />
+<style>
+  :root{
+    --paper: #F1ECDD;
+    --paper-card: #FBF8F0;
+    --ink: #1B1712;
+    --ink-soft: #55503F;
+    --ink-faint: #8A8371;
+    --orange: #EE5A0E;
+    --orange-deep: #C7420A;
+    --navy: #1C2A46;
+    --rule: #cabb98;
+    --rule-soft: #dfd4b8;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Nanum Myeongjo', serif;
+    line-height:1.75;
+  }
+  .sans{ font-family:'Pretendard Variable','Pretendard',sans-serif; }
+  .serif-display{ font-family:'Noto Serif KR', serif; }
+
+  /* paper texture */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(0,0,0,0.015) 0, transparent 40%),
+      radial-gradient(circle at 80% 60%, rgba(0,0,0,0.02) 0, transparent 45%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .wrap{ max-width: 1080px; margin:0 auto; padding: 0 22px; position:relative; z-index:1; }
+
+  /* ===== Ticker ===== */
+  .ticker-bar{
+    background: var(--ink);
+    color: var(--paper);
+    font-family:'Pretendard Variable','Pretendard',sans-serif;
+    font-size: 12.5px;
+    letter-spacing: .02em;
+    overflow:hidden;
+    white-space:nowrap;
+    border-bottom: 1px solid var(--orange);
+  }
+  .ticker-inner{
+    display:inline-block;
+    padding: 7px 0;
+    animation: scroll-left 26s linear infinite;
+  }
+  .ticker-inner span{ margin-right: 56px; color: var(--paper); opacity:.92; }
+  .ticker-inner span b{ color: var(--orange); font-weight:700; }
+  @keyframes scroll-left{
+    0%{ transform: translateX(0); }
+    100%{ transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .ticker-inner{ animation: none; }
+  }
+
+  /* ===== Masthead ===== */
+  .masthead{ padding: 26px 0 14px; text-align:center; border-bottom: 3px solid var(--ink); }
+  .masthead-meta{
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-family:'Pretendard Variable','Pretendard',sans-serif;
+    font-size: 11.5px; color: var(--ink-soft); letter-spacing:.06em;
+    padding-bottom: 10px; text-transform:uppercase;
+  }
+  .nameplate{
+    font-family:'Noto Serif KR', serif;
+    font-weight: 900;
+    font-size: clamp(46px, 8vw, 84px);
+    letter-spacing: -0.01em;
+    margin: 6px 0 4px;
+    color: var(--ink);
+    position:relative;
+    display:inline-block;
+  }
+  .nameplate .accent{ color: var(--orange); }
+  .tagline{
+    font-family:'Pretendard Variable','Pretendard',sans-serif;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    letter-spacing: .18em;
+    text-transform:uppercase;
+    margin-top: 2px;
+  }
+  .rule-thin{ height:1px; background:var(--rule); border:none; margin:0; }
+
+  /* ===== Series strip ===== */
+  .series-strip{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    padding: 14px 0; font-family:'Pretendard Variable','Pretendard',sans-serif;
+    font-size: 12.5px; color: var(--ink-soft); flex-wrap:wrap;
+  }
+  .series-chip{
+    padding: 4px 12px; border:1px solid var(--rule); border-radius: 999px;
+    background: var(--paper-card);
+  }
+  .series-chip.active{ background: var(--ink); color: var(--paper); border-color:var(--ink); font-weight:600; }
+
+  /* ===== Headline block ===== */
+  .headline-block{ padding: 30px 0 8px; border-bottom: 1px solid var(--rule); }
+  .eyebrow{
+    font-family:'Pretendard Variable','Pretendard',sans-serif;
+    font-size: 13px; font-weight:700; color: var(--orange-deep);
+    letter-spacing:.1em; text-transform:uppercase; margin-bottom: 10px;
+  }
+  h1.headline{
+    font-family:'Noto Serif KR', serif; font-weight:900;
+    font-size: clamp(32px, 4.6vw, 54px);
+    line-height:1.18; letter-spacing:-0.01em; margin: 0 0 16px;
+  }
+  .deck{
+    font-family:'Nanum Myeongjo', serif;
+    font-size: clamp(18px, 2.2vw, 22px);
+    color: var(--ink-soft); font-weight:400; line-height:1.55;
+    margin: 0 0 20px; max-width: 780px;
+  }
+  .byline-row{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;
+    font-family:'Pretendard Variable','Pretendard',sans-serif;
+    font-size: 13px; color: var(--ink-soft); padding-bottom: 20px;
+  }
+  .byline-row b{ color: var(--ink); }
+
+  /* ===== Hero illustration ===== */
+  .hero-art{ margin: 24px 0 8px; border: 1px solid var(--rule); background: var(--paper-card); }
+  .hero-art svg{ display:block; width:100%; height:auto; }
+  .hero-caption{
+    font-family:'Pretendard Variable','Pretendard',sans-serif;
+    font-size: 12.5px; color: var(--ink-faint); padding: 8px 4px 26px;
+    border-bottom: 1px solid var(--rule); line-height:1.5;
+  }
+
+  /* ===== Layout: article + sidebar ===== */
+  .content-grid{
+    display:grid; grid-template-columns: 1fr 260px; gap: 44px;
+    padding: 34px 0 10px; align-items:start;
+  }
+  @media (max-width: 860px){
+    .content-grid{ grid-template-columns: 1fr; }
+  }
+
+  article{ column-count: 1; }
+  .lede::first-letter{
+    font-family:'Noto Serif KR', serif;
+    font-weight:900; font-size: 74px; line-height:0.72;
+    float:left; padding: 6px 8px 0 0; color: var(--orange-deep);
+  }
+
+  h2.section-head{
+    font-family:'Noto Serif KR', serif; font-weight:700;
+    font-size: 25px; margin: 40px 0 6px; padding-top: 18px;
+    border-top: 1px solid var(--rule); letter-spacing:-0.01em;
+  }
+  h2.section-head .num{
+    font-family:'Pretendard Variable','Pretendard',sans-serif;
+    font-size: 12px; font-weight:700; color: var(--orange-deep);
+    letter-spacing:.08em; display:block; margin-bottom:8px;
+  }
+  p{ margin: 0 0 18px; font-size: 17px; color: var(--ink); }
+  p.small{ font-size:15px; color:var(--ink-soft); }
+
+  blockquote.pullquote{
+    font-family:'Noto Serif KR', serif;
+    font-weight:700; font-size: 25px; line-height:1.45;
+    color: var(--navy);
+    border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink);
+    padding: 18px 4px; margin: 30px 0; letter-spacing:-0.01em;
+  }
+  blockquote.pullquote cite{
+    display:block; font-family:'Pretendard Variable','Pretendard',sans-serif;
+    font-style:normal; font-size:13px; font-weight:500; color: var(--ink-faint);
+    margin-top:10px;
+  }
+
+  .stat-box{
+    background: var(--paper-card); border:1px solid var(--rule);
+    padding: 18px 20px; margin: 22px 0;
+  }
+  .stat-box .label{
+    font-family:'Pretendard Variable','Pretendard',sans-serif;
+    font-size:12px; color:var(--orange-deep); font-weight:700; letter-spacing:.06em; margin-bottom:8px;
+  }
+  .stat-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+  .stat-grid div{ text-align:center; }
+  .stat-grid .num{ font-family:'Noto Serif KR',serif; font-weight:900; font-size:26px; color:var(--ink); }
+  .stat-grid .cap{ font-family:'Pretendard Variable','Pretendard',sans-serif; font-size:11.5px; color:var(--ink-soft); margin-top:2px; }
+
+  /* ===== Sidebar timeline ===== */
+  .sidebar{ position:sticky; top: 18px; }
+  .sidebar-title{
+    font-family:'Pretendard Variable','Pretendard',sans-serif;
+    font-size: 12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+    color: var(--ink); border-bottom: 2px solid var(--ink); padding-bottom:8px; margin-bottom: 4px;
+  }
+  .timeline{ position:relative; padding-left: 20px; margin-top: 18px; }
+  .timeline::before{
+    content:""; position:absolute; left:5px; top:4px; bottom:4px; width:2px; background: var(--rule);
+  }
+  .t-item{ position:relative; padding-bottom: 26px; }
+  .t-item:last-child{ padding-bottom:0; }
+  .t-item::before{
+    content:""; position:absolute; left:-19px; top:3px; width:11px; height:11px; border-radius:50%;
+    background: var(--paper-card); border:2px solid var(--orange); z-index:1;
+  }
+  .t-item.peak::before{ background: var(--orange); }
+  .t-year{
+    font-family:'Pretendard Variable','Pretendard',sans-serif;
+    font-weight:800; font-size:14px; color: var(--orange-deep);
+  }
+  .t-desc{ font-size:13.5px; color: var(--ink-soft); margin-top:2px; line-height:1.5; font-family:'Nanum Myeongjo',serif;}
+
+  /* ===== next episode teaser ===== */
+  .teaser{
+    margin: 46px 0 30px; padding: 26px; background: var(--ink); color: var(--paper);
+    display:flex; gap: 20px; align-items:center; flex-wrap:wrap; justify-content:space-between;
+  }
+  .teaser .left{ max-width: 640px; }
+  .teaser .tag{
+    font-family:'Pretendard Variable','Pretendard',sans-serif; font-size:11.5px; letter-spacing:.14em;
+    color: var(--orange); text-transform:uppercase; font-weight:700; margin-bottom:8px;
+  }
+  .teaser h3{ font-family:'Noto Serif KR',serif; font-size:22px; margin:0 0 8px; }
+  .teaser p{ color:#d8d3c4; font-size:14.5px; margin:0; }
+  .teaser .badge{
+    font-family:'Pretendard Variable','Pretendard',sans-serif; font-weight:700; font-size:13px;
+    border:1px solid var(--orange); color: var(--orange); padding: 8px 16px; white-space:nowrap;
+  }
+
+  /* ===== Reader engagement box ===== */
+  .letters{
+    border: 2px solid var(--ink); background: var(--paper-card);
+    margin: 10px 0 60px; padding: 30px;
+  }
+  .letters-head{ display:flex; align-items:center; gap:10px; margin-bottom: 6px; }
+  .letters-head .icon{ font-size:20px; }
+  .letters-title{ font-family:'Noto Serif KR',serif; font-weight:900; font-size:22px; }
+  .letters-sub{ font-family:'Pretendard Variable','Pretendard',sans-serif; font-size:13.5px; color:var(--ink-soft); margin: 4px 0 22px; }
+
+  .poll{ margin-bottom: 26px; }
+  .poll-q{ font-family:'Pretendard Variable','Pretendard',sans-serif; font-weight:700; font-size:14.5px; margin-bottom:12px; }
+  .poll-options{ display:flex; flex-direction:column; gap:8px; }
+  .poll-opt{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    border:1px solid var(--rule); padding: 10px 14px; cursor:pointer;
+    font-family:'Pretendard Variable','Pretendard',sans-serif; font-size:14px;
+    background: #fff; transition: background .15s ease, border-color .15s ease;
+    position:relative; overflow:hidden;
+  }
+  .poll-opt:hover{ border-color: var(--orange); }
+  .poll-opt .bar{
+    position:absolute; left:0; top:0; bottom:0; background: rgba(238,90,14,0.14); width:0%;
+    transition: width .5s ease; z-index:0;
+  }
+  .poll-opt .txt, .poll-opt .pct{ position:relative; z-index:1; }
+  .poll-opt .pct{ font-weight:700; color: var(--orange-deep); display:none; }
+  .poll.voted .poll-opt{ cursor:default; }
+  .poll.voted .poll-opt .pct{ display:inline; }
+  .poll.voted .poll-opt:hover{ border-color: var(--rule); }
+  .poll-note{ font-family:'Pretendard Variable','Pretendard',sans-serif; font-size:12px; color:var(--ink-faint); margin-top:8px; }
+
+  .comment-form label{
+    display:block; font-family:'Pretendard Variable','Pretendard',sans-serif; font-weight:700; font-size:14.5px; margin-bottom: 10px;
+  }
+  .comment-form textarea{
+    width:100%; min-height: 84px; border:1px solid var(--rule); background:#fff;
+    font-family:'Nanum Myeongjo',serif; font-size:15px; padding: 12px; resize:vertical; color:var(--ink);
+  }
+  .comment-form textarea:focus{ outline:2px solid var(--orange); outline-offset:1px; }
+  .comment-form .row{ display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; align-items:center; }
+  .comment-form input[type="text"]{
+    border:1px solid var(--rule); background:#fff; padding:9px 12px; font-family:'Pretendard Variable','Pretendard',sans-serif;
+    font-size: 13.5px; flex:1; min-width:160px;
+  }
+  .comment-form input[type="text"]:focus{ outline:2px solid var(--orange); outline-offset:1px; }
+  .submit-btn{
+    background: var(--orange); color:#fff; border:none; padding: 10px 20px;
+    font-family:'Pretendard Variable','Pretendard',sans-serif; font-weight:700; font-size:13.5px; cursor:pointer;
+  }
+  .submit-btn:hover{ background: var(--orange-deep); }
+  .submit-btn:focus-visible, .poll-opt:focus-visible{ outline:2px solid var(--navy); outline-offset:2px; }
+
+  .wall{ margin-top: 22px; border-top:1px solid var(--rule); padding-top: 16px; }
+  .wall-item{ padding: 10px 0; border-bottom: 1px dashed var(--rule-soft); }
+  .wall-item:last-child{ border-bottom:none; }
+  .wall-item .name{ font-family:'Pretendard Variable','Pretendard',sans-serif; font-weight:700; font-size:13px; color:var(--orange-deep); }
+  .wall-item .msg{ font-size:15px; margin-top:2px; }
+  .wall-empty{ font-family:'Pretendard Variable','Pretendard',sans-serif; font-size:13px; color: var(--ink-faint); padding: 6px 0; }
+
+  footer{
+    text-align:center; padding: 24px 0 50px; font-family:'Pretendard Variable','Pretendard',sans-serif;
+    font-size:12px; color: var(--ink-faint); border-top: 1px solid var(--rule);
+  }
+</style>
+</head>
+<body>
+
+<div class="ticker-bar">
+  <div class="ticker-inner sans">
+    <span>속보 <b>7년 만의 가을야구</b> — 2025 정규시즌 2위 확정</span>
+    <span>2025 플레이오프 <b>한화 3승 2패 삼성</b> — 19년 만의 한국시리즈行</span>
+    <span>2025 한국시리즈 <b>LG 4승 1패 한화</b> — 준우승, 그러나 증명된 것들</span>
+    <span>대전 한화생명 볼파크 신축 개장 — 39년 만의 새 둥지</span>
+    <span>속보 <b>7년 만의 가을야구</b> — 2025 정규시즌 2위 확정</span>
+    <span>2025 플레이오프 <b>한화 3승 2패 삼성</b> — 19년 만의 한국시리즈行</span>
+    <span>2025 한국시리즈 <b>LG 4승 1패 한화</b> — 준우승, 그러나 증명된 것들</span>
+    <span>대전 한화생명 볼파크 신축 개장 — 39년 만의 새 둥지</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="masthead">
+    <div class="masthead-meta sans">
+      <span>제1호 · 창간 특집</span>
+      <span>2026년 7월 17일 금요일</span>
+      <span>스포츠 연대기부</span>
+    </div>
+    <div class="nameplate">이글스 <span class="accent">타임즈</span></div>
+    <div class="tagline sans">EAGLES TIMES · 대전과 함께 난 39년, 활자로 다시 쓰다</div>
+  </div>
+
+  <div class="series-strip">
+    <span class="series-chip active">1부 · 시대의 서사</span>
+    <span class="series-chip">2부 · 사람들</span>
+    <span class="series-chip">3부 · 팬덤이라는 종교</span>
+    <span class="series-chip">4부 · 숫자로 읽는 이글스</span>
+    <span class="series-chip">5부 · 그 다음 우승까지</span>
+  </div>
+
+  <div class="headline-block">
+    <div class="eyebrow">5부작 시리즈 · 1부</div>
+    <h1 class="headline">39년, 한 번의 정상과 여덟 번의 바닥 — 그리고 다시 열린 문</h1>
+    <p class="deck">빙그레라는 이름으로 대전에 뿌리내린 지 39년. 단 한 번의 우승과 유례없이 길었던 침체, 그리고 2025년 가을 다시 찾아온 기적 같은 반등까지 — 한화 이글스가 걸어온 시대를 연대순으로 되짚는다.</p>
+    <div class="byline-row">
+      <span>By <b>이글스 타임즈 스포츠부</b></span>
+      <span>읽는 시간 약 9분</span>
+    </div>
+  </div>
+
+  <div class="hero-art">
+    <svg viewBox="0 0 1000 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="1986년부터 2025년까지 한화 이글스 39년을 정리한 연대표">
+      <rect width="1000" height="300" fill="#FBF8F0"/>
+
+      <!-- axis endpoints -->
+      <text x="60" y="40" font-family="Pretendard Variable, Pretendard, sans-serif" font-size="12" font-weight="700" letter-spacing="1" fill="#8A8371">1986</text>
+      <text x="940" y="40" text-anchor="end" font-family="Pretendard Variable, Pretendard, sans-serif" font-size="12" font-weight="700" letter-spacing="1" fill="#8A8371">2025</text>
+
+      <!-- dark-era band -->
+      <rect x="579" y="168" width="316" height="44" fill="#EE5A0E" opacity="0.08"/>
+
+      <!-- baseline -->
+      <line x1="60" y1="190" x2="940" y2="190" stroke="#cabb98" stroke-width="2"/>
+      <polygon points="940,190 928,184 928,196" fill="#cabb98"/>
+
+      <!-- 1986 창단 -->
+      <circle cx="60" cy="190" r="6" fill="#1B1712"/>
+      <line x1="60" y1="196" x2="60" y2="212" stroke="#cabb98" stroke-width="1"/>
+      <text x="60" y="232" text-anchor="middle" font-family="Noto Serif KR, serif" font-weight="700" font-size="15" fill="#1B1712">1986</text>
+      <text x="60" y="250" text-anchor="middle" font-family="Pretendard Variable, Pretendard, sans-serif" font-size="12" fill="#55503F">창단</text>
+
+      <!-- 1992 4회 준우승 -->
+      <circle cx="195" cy="190" r="5" fill="#8A8371"/>
+      <line x1="195" y1="184" x2="195" y2="168" stroke="#cabb98" stroke-width="1"/>
+      <text x="195" y="150" text-anchor="middle" font-family="Noto Serif KR, serif" font-weight="700" font-size="14" fill="#55503F">1988–92</text>
+      <text x="195" y="132" text-anchor="middle" font-family="Pretendard Variable, Pretendard, sans-serif" font-size="11.5" fill="#8A8371">4회 준우승</text>
+
+      <!-- 1999 우승 (peak) -->
+      <circle cx="353" cy="190" r="9" fill="#EE5A0E"/>
+      <circle cx="353" cy="190" r="14" fill="none" stroke="#EE5A0E" stroke-width="1.5" opacity="0.4"/>
+      <line x1="353" y1="181" x2="353" y2="160" stroke="#EE5A0E" stroke-width="1.5"/>
+      <text x="353" y="140" text-anchor="middle" font-family="Noto Serif KR, serif" font-weight="900" font-size="20" fill="#C7420A">1999</text>
+      <text x="353" y="120" text-anchor="middle" font-family="Pretendard Variable, Pretendard, sans-serif" font-weight="700" font-size="12.5" fill="#C7420A">창단 첫 우승</text>
+
+      <!-- 2006 마지막 KS -->
+      <circle cx="511" cy="190" r="5" fill="#1C2A46"/>
+      <line x1="511" y1="196" x2="511" y2="212" stroke="#cabb98" stroke-width="1"/>
+      <text x="511" y="232" text-anchor="middle" font-family="Noto Serif KR, serif" font-weight="700" font-size="14" fill="#1C2A46">2006</text>
+      <text x="511" y="250" text-anchor="middle" font-family="Pretendard Variable, Pretendard, sans-serif" font-size="11.5" fill="#55503F">마지막 KS 준우승</text>
+
+      <!-- dark era label inside band -->
+      <text x="737" y="194" text-anchor="middle" font-family="Pretendard Variable, Pretendard, sans-serif" font-weight="700" font-size="12.5" fill="#C7420A" opacity="0.85">2009 – 2023 · 여덟 번의 최하위</text>
+      <circle cx="579" cy="190" r="4" fill="#8A8371"/>
+      <circle cx="895" cy="190" r="4" fill="#8A8371"/>
+
+      <!-- 2025 한국시리즈 복귀 (peak) -->
+      <circle cx="940" cy="190" r="9" fill="#EE5A0E"/>
+      <circle cx="940" cy="190" r="14" fill="none" stroke="#EE5A0E" stroke-width="1.5" opacity="0.4"/>
+      <line x1="940" y1="181" x2="940" y2="160" stroke="#EE5A0E" stroke-width="1.5"/>
+      <text x="940" y="140" text-anchor="middle" font-family="Noto Serif KR, serif" font-weight="900" font-size="20" fill="#C7420A">2025</text>
+      <text x="895" y="120" text-anchor="middle" font-family="Pretendard Variable, Pretendard, sans-serif" font-weight="700" font-size="12.5" fill="#C7420A">19년 만의 한국시리즈</text>
+    </svg>
+  </div>
+  <div class="hero-caption sans">연대표 — 1986년 창단부터 2025년까지, 39년을 하나의 축 위에 정리했다. 두 번의 정점(1999, 2025) 사이에 낀 긴 침체기(2009~2023)가 이 시리즈 1부의 뼈대다.</div>
+
+  <div class="content-grid">
+    <article>
+
+      <p class="lede">1986년 3월 8일, 대전에는 아직 프로야구팀이 없었다. 그해 봄 빙그레가 여섯 번째 구단으로 리그에 뛰어들며 창단한 이 팀은, 훗날 이름을 세 번 바꾸고 홈구장을 두 번 옮기는 동안에도 단 하나만은 바꾸지 않았다 — 대전이라는 연고지, 그리고 그 도시가 이 팀에 거는 유별난 애정이다. 39년이 흐른 지금, 이 팀의 역사를 한 문장으로 요약하자면 이렇다. 단 한 번의 정상, 지독하게 길었던 하강, 그리고 누구도 예상 못 했던 2025년의 귀환.</p>
+
+      <h2 class="section-head"><span class="num">01 · 1986–1992</span>신흥 강호의 탄생</h2>
+      <p>빙그레 이글스는 시작부터 약체는 아니었다. 1988년 김영덕 감독이 지휘봉을 잡은 뒤 팀은 빠르게 성장해, 1988년부터 1992년까지 5년 사이 무려 네 차례나 한국시리즈 무대를 밟았다. 그러나 매번 준우승에 그쳤다 — 1988년과 1989년에는 해태에, 1991년에도 해태에, 1992년에는 롯데에 우승컵을 내줬다. 특히 1992년은 정규시즌 38경기 만에 30승을 챙길 정도로 압도적인 전력을 자랑했음에도 정상에 서지 못해, 이 시기는 오래도록 <b>'우승의 벽'</b>이라는 표현으로 회자됐다.</p>
+
+      <div class="stat-box">
+        <div class="label sans">1988–1992 · 한국시리즈 성적</div>
+        <div class="stat-grid">
+          <div><div class="num">4회</div><div class="cap sans">한국시리즈 진출</div></div>
+          <div><div class="num">0회</div><div class="cap sans">우승</div></div>
+          <div><div class="num">5년</div><div class="cap sans">신흥 강호 전성기</div></div>
+        </div>
+      </div>
+
+      <h2 class="section-head"><span class="num">02 · 1993–1999</span>이름을 바꾸고, 마침내 정상에</h2>
+      <p>1993년 11월 1일, 구단명이 한화 이글스로 바뀐다. 모기업이 달라졌지만 대전이라는 뿌리와 그동안 쌓인 '준우승의 한'은 그대로 이어졌다. 그리고 6년 뒤인 1999년, 이희수 감독 체제 아래 정규시즌 3위로 포스트시즌에 오른 한화는 플레이오프에서 두산을 넘고 롯데와 한국시리즈에서 맞붙는다. 결과는 4승 1패, 창단 13년 만의 첫 우승이었다. 시리즈 MVP는 구대성이 차지했고, 이 우승은 지금까지도 구단 역사상 유일한 한국시리즈 우승으로 남아 있다.</p>
+
+      <blockquote class="pullquote">
+        창단 13년 만의 첫 우승. 그리고 26년이 지난 지금까지도, 이 한 번의 기억은 한화 팬들에게 가장 뜨거운 온도로 남아 있다.
+      </blockquote>
+
+      <h2 class="section-head"><span class="num">03 · 2005–2006</span>마지막 불꽃</h2>
+      <p>2000년대 초반 이광환 감독 체제를 거쳐, 2005년부터 2007년까지 김인식 감독 아래 한화는 다시 상위권으로 복귀한다. 2006년에는 삼성과 한국시리즈에서 맞붙었지만 1승 1무 4패로 준우승에 머물렀다. 당시에는 누구도 몰랐다 — 이 무대가 앞으로 19년간 한화가 다시 밟지 못할 마지막 한국시리즈가 되리라는 것을.</p>
+
+      <h2 class="section-head"><span class="num">04 · 2008–2023</span>가장 길었던 겨울</h2>
+      <p>2008년, 신인 류현진이 '고독한 에이스'로 홀로 마운드를 지키기 시작하던 그 무렵부터 한화의 장기 암흑기가 열린다. 2008년까지 구단이 최하위를 기록한 건 창단 첫 시즌인 1986년뿐이었지만, 2009년 이후로는 무려 여덟 번이나 최하위에 머물렀다. 이 시기 팬들 사이에서는 자조와 애정이 뒤섞인 특유의 유머 문화가 생겨났고, 좋아하는 팀의 성적과 무관하게 야구장을 채우는 독특한 팬덤이 이때부터 다져지기 시작했다. 역설적이게도, 가장 힘들었던 시기가 가장 단단한 팬덤을 남겼다.</p>
+
+      <h2 class="section-head"><span class="num">05 · 2024–2025</span>다시, 가을</h2>
+      <p>2024년, 메이저리그를 거친 원조 에이스 류현진이 친정팀으로 돌아온다. 같은 해 시즌 도중 김경문 감독이 부임하며 팀의 색깔이 바뀌기 시작했다. 그리고 김 감독 부임 2년 차인 2025년, 한화는 시즌 초반 선두를 달리며 전반기를 1위로 마쳤다. 이후 LG에 추월당해 정규시즌 최종 순위는 2위(1.5경기 차)에 그쳤지만, 이는 7년 만의 포스트시즌 진출이었다. 플레이오프에서는 삼성을 3승 2패로 꺾고 19년 만에 한국시리즈 무대를 밟았다. 한국시리즈에서는 LG에 1승 4패로 밀리며 우승에는 이르지 못했지만, 그 봄과 여름과 가을은 한화가 더 이상 예전의 한화가 아님을 증명하기에 충분했다.</p>
+
+      <div class="stat-box">
+        <div class="label sans">2025 시즌 · 한눈에 보는 반등</div>
+        <div class="stat-grid">
+          <div><div class="num">2위</div><div class="cap sans">정규시즌 최종순위</div></div>
+          <div><div class="num">7년</div><div class="cap sans">만의 포스트시즌</div></div>
+          <div><div class="num">19년</div><div class="cap sans">만의 한국시리즈</div></div>
+        </div>
+      </div>
+
+      <p class="small">다음 편에서는 이 39년의 서사를 이끈 사람들 — 장종훈과 송진우, 정민철과 구대성에서부터 류현진의 원클럽맨 서사, 그리고 노시환과 문동주로 이어지는 세대교체까지 — 을 인물 중심으로 들여다본다.</p>
+
+    </article>
+
+    <aside class="sidebar">
+      <div class="sidebar-title sans">39년 연표</div>
+      <div class="timeline">
+        <div class="t-item">
+          <div class="t-year">1986</div>
+          <div class="t-desc">빙그레 이글스 창단, 대전 연고 시작</div>
+        </div>
+        <div class="t-item">
+          <div class="t-year">1988–92</div>
+          <div class="t-desc">한국시리즈 4회 진출, 전부 준우승</div>
+        </div>
+        <div class="t-item">
+          <div class="t-year">1993</div>
+          <div class="t-desc">한화 이글스로 구단명 변경</div>
+        </div>
+        <div class="t-item peak">
+          <div class="t-year">1999</div>
+          <div class="t-desc">창단 13년 만의 첫 한국시리즈 우승</div>
+        </div>
+        <div class="t-item">
+          <div class="t-year">2006</div>
+          <div class="t-desc">한국시리즈 준우승, 이후 19년간 무진출</div>
+        </div>
+        <div class="t-item">
+          <div class="t-year">2009–23</div>
+          <div class="t-desc">여덟 차례 최하위, 최장기 암흑기</div>
+        </div>
+        <div class="t-item">
+          <div class="t-year">2024</div>
+          <div class="t-desc">류현진 복귀, 김경문 감독 부임</div>
+        </div>
+        <div class="t-item peak">
+          <div class="t-year">2025</div>
+          <div class="t-desc">정규 2위, 19년 만의 한국시리즈行</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="teaser">
+    <div class="left">
+      <div class="tag sans">다음 화 예고 · 2부</div>
+      <h3>사람들 — 이글스라는 이름을 만든 얼굴들</h3>
+      <p>장종훈의 방망이, 송진우의 어깨, 그리고 류현진이라는 하나의 시대. 39년 역사를 관통한 인물들의 이야기가 이어집니다.</p>
+    </div>
+    <div class="badge sans">2부에서 계속</div>
+  </div>
+
+  <div class="letters">
+    <div class="letters-head">
+      <span class="icon">✉️</span>
+      <span class="letters-title">독자 참여 — 당신의 이글스는 언제부터입니까</span>
+    </div>
+    <div class="letters-sub sans">이 기사를 읽은 독자 여러분의 생각을 듣고 싶습니다. 투표와 댓글은 이 페이지 안에서만 집계됩니다.</div>
+
+    <div class="poll" id="poll">
+      <div class="poll-q sans">Q. 39년 이글스 역사에서 가장 인상 깊은 순간은?</div>
+      <div class="poll-options" id="pollOptions">
+        <div class="poll-opt" data-key="1988" tabindex="0" role="button">
+          <span class="bar"></span>
+          <span class="txt">1988–1992, 4회 준우승의 신흥 강호 시절</span>
+          <span class="pct">0%</span>
+        </div>
+        <div class="poll-opt" data-key="1999" tabindex="0" role="button">
+          <span class="bar"></span>
+          <span class="txt">1999년, 유일무이한 그 우승</span>
+          <span class="pct">0%</span>
+        </div>
+        <div class="poll-opt" data-key="dark" tabindex="0" role="button">
+          <span class="bar"></span>
+          <span class="txt">2009–2023, 그럼에도 야구장을 지킨 시간</span>
+          <span class="pct">0%</span>
+        </div>
+        <div class="poll-opt" data-key="2025" tabindex="0" role="button">
+          <span class="bar"></span>
+          <span class="txt">2025년, 19년 만의 한국시리즈</span>
+          <span class="pct">0%</span>
+        </div>
+      </div>
+      <div class="poll-note sans" id="pollNote">항목을 클릭하면 투표할 수 있습니다.</div>
+    </div>
+
+    <div class="comment-form">
+      <label class="sans" for="msg">한 줄로 남겨보세요 — 당신의 첫 이글스 기억, 혹은 하고 싶은 말</label>
+      <textarea id="msg" placeholder="예: 2006년 한국시리즈를 아버지와 함께 TV로 봤던 기억이 아직도 생생합니다."></textarea>
+      <div class="row">
+        <input type="text" id="name" placeholder="닉네임 (선택)">
+        <button class="submit-btn sans" id="submitBtn">의견 남기기</button>
+      </div>
+    </div>
+
+    <div class="wall sans" id="wall">
+      <div class="wall-empty">아직 등록된 의견이 없습니다. 첫 댓글의 주인공이 되어보세요.</div>
+    </div>
+  </div>
+
+  <footer>
+    이글스 타임즈 · 5부작 시리즈 &middot; 1부 시대의 서사 · 본 기사는 창작 기획물로 제작되었습니다
+  </footer>
+
+</div>
+
+<script>
+  // ---- Poll (in-memory only, resets on reload) ----
+  (function(){
+    var votes = { "1988": 12, "1999": 41, "dark": 20, "2025": 27 }; // seed distribution for illustrative feel
+    var voted = false;
+    var pollEl = document.getElementById('poll');
+    var note = document.getElementById('pollNote');
+    var opts = document.querySelectorAll('.poll-opt');
+
+    function total(){
+      return Object.values(votes).reduce(function(a,b){ return a+b; }, 0);
+    }
+    function render(){
+      var t = total();
+      opts.forEach(function(opt){
+        var key = opt.getAttribute('data-key');
+        var pct = t > 0 ? Math.round((votes[key]/t)*100) : 0;
+        opt.querySelector('.bar').style.width = pct + '%';
+        opt.querySelector('.pct').textContent = pct + '%';
+      });
+    }
+    function castVote(key){
+      if(voted) return;
+      votes[key] = (votes[key]||0) + 1;
+      voted = true;
+      pollEl.classList.add('voted');
+      note.textContent = '투표해 주셔서 감사합니다. 현재 참여자 ' + total() + '명의 결과입니다.';
+      render();
+    }
+    opts.forEach(function(opt){
+      opt.addEventListener('click', function(){ castVote(opt.getAttribute('data-key')); });
+      opt.addEventListener('keydown', function(e){
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); castVote(opt.getAttribute('data-key')); }
+      });
+    });
+    render();
+  })();
+
+  // ---- Comment wall (in-memory only) ----
+  (function(){
+    var wall = document.getElementById('wall');
+    var btn = document.getElementById('submitBtn');
+    var msgInput = document.getElementById('msg');
+    var nameInput = document.getElementById('name');
+    var entries = [];
+
+    function renderWall(){
+      if(entries.length === 0){
+        wall.innerHTML = '<div class="wall-empty">아직 등록된 의견이 없습니다. 첫 댓글의 주인공이 되어보세요.</div>';
+        return;
+      }
+      wall.innerHTML = entries.map(function(e){
+        return '<div class="wall-item"><div class="name">' + e.name + '</div><div class="msg">' + e.msg + '</div></div>';
+      }).join('');
+    }
+    function escapeHtml(str){
+      var div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+    btn.addEventListener('click', function(){
+      var msg = msgInput.value.trim();
+      if(!msg) { msgInput.focus(); return; }
+      var name = nameInput.value.trim() || '익명의 독자';
+      entries.unshift({ name: escapeHtml(name), msg: escapeHtml(msg) });
+      msgInput.value = '';
+      nameInput.value = '';
+      renderWall();
+    });
+  })();
+</script>
+
+</body>
+</html>
