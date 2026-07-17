@@ -286,6 +286,103 @@
     color:var(--ink-soft);
   }
 
+  /* ---------- Kids quiz ---------- */
+  .quiz-wrap{
+    max-width:760px;
+    margin:0 auto;
+  }
+  .quiz-score{
+    text-align:center;
+    font-family:'Noto Sans KR', sans-serif;
+    font-size:13px;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    margin-bottom:22px;
+  }
+  .quiz-score strong{
+    color:var(--green);
+    font-size:16px;
+  }
+  .quiz-item{
+    background:var(--card);
+    border:1px solid var(--ink);
+    padding:20px 22px;
+    margin-bottom:16px;
+  }
+  .quiz-q{
+    font-size:17px;
+    font-weight:700;
+    margin-bottom:14px;
+    line-height:1.5;
+  }
+  .quiz-q .qn{
+    color:var(--green);
+    margin-right:6px;
+  }
+  .quiz-options{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:4px;
+  }
+  .quiz-opt{
+    font-family:'Noto Sans KR', sans-serif;
+    font-size:14.5px;
+    background:var(--paper);
+    border:1px solid var(--ink-soft);
+    color:var(--ink);
+    padding:11px 12px;
+    text-align:left;
+    cursor:pointer;
+    border-radius:3px;
+    transition:background .15s ease, transform .1s ease;
+  }
+  .quiz-opt:hover:not(:disabled){
+    background:var(--paper-deep);
+    transform:translateY(-1px);
+  }
+  .quiz-opt:disabled{ cursor:default; }
+  .quiz-opt.correct{
+    background:var(--green);
+    border-color:var(--green);
+    color:var(--paper);
+    font-weight:700;
+  }
+  .quiz-opt.wrong{
+    background:#7a3230;
+    border-color:#7a3230;
+    color:var(--paper);
+  }
+  .quiz-feedback{
+    display:none;
+    font-family:'Noto Sans KR', sans-serif;
+    font-size:13.5px;
+    color:var(--ink-soft);
+    background:var(--paper-deep);
+    padding:10px 12px;
+    margin-top:10px;
+    border-left:3px solid var(--green);
+  }
+  .quiz-feedback.show{ display:block; }
+  .quiz-reset{
+    display:block;
+    margin:6px auto 0;
+    font-family:'Noto Sans KR', sans-serif;
+    font-size:12.5px;
+    letter-spacing:.06em;
+    background:none;
+    border:1px solid var(--ink);
+    color:var(--ink);
+    padding:9px 20px;
+    border-radius:2px;
+    cursor:pointer;
+  }
+  .quiz-reset:hover{ background:var(--ink); color:var(--paper); }
+
+  @media (max-width:520px){
+    .quiz-options{ grid-template-columns:1fr; }
+  }
+
   /* ---------- Footer ---------- */
   .colophon{
     margin-top:60px;
@@ -483,10 +580,114 @@
 
   </div>
 
+  <!-- ================= KIDS QUIZ ================= -->
+  <hr class="section-rule">
+  <div class="section-title">
+    <div class="eyebrow">어린이판 · 클릭 퀴즈</div>
+    <h3>사마귀 박사 되기</h3>
+  </div>
+  <p class="section-sub">위 기사를 잘 읽었다면 다 풀 수 있어요! 답을 눌러서 바로 확인해 보세요.</p>
+
+  <div class="quiz-wrap">
+    <div class="quiz-score sans">지금까지 5문제 중 <strong id="quiz-score-num">0</strong>문제 맞혔어요!</div>
+
+    <div class="quiz-item">
+      <div class="quiz-q"><span class="qn">Q1.</span> 사마귀는 고개를 얼마나 돌릴 수 있을까요?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" data-correct="false" onclick="answerQuiz(this,false)">90도</button>
+        <button class="quiz-opt" data-correct="true" onclick="answerQuiz(this,true)">거의 뒤까지</button>
+        <button class="quiz-opt" data-correct="false" onclick="answerQuiz(this,false)">전혀 못 돌린다</button>
+        <button class="quiz-opt" data-correct="false" onclick="answerQuiz(this,false)">위아래로만</button>
+      </div>
+      <div class="quiz-feedback">정답은 <strong>거의 뒤까지</strong>예요! 사마귀는 삼각형 머리를 거의 뒤쪽까지 돌려서 주변을 살필 수 있어요.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q"><span class="qn">Q2.</span> 한국에는 사마귀가 모두 몇 종 살고 있을까요?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" data-correct="false" onclick="answerQuiz(this,false)">3종</button>
+        <button class="quiz-opt" data-correct="false" onclick="answerQuiz(this,false)">5종</button>
+        <button class="quiz-opt" data-correct="true" onclick="answerQuiz(this,true)">7종</button>
+        <button class="quiz-opt" data-correct="false" onclick="answerQuiz(this,false)">12종</button>
+      </div>
+      <div class="quiz-feedback">정답은 <strong>7종</strong>! 왕사마귀, 참사마귀, 좀사마귀, 넓적배사마귀, 항라사마귀, 애기사마귀, 좁쌀사마귀가 있어요.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q"><span class="qn">Q3.</span> 앞다리 사이에 아이보리색 점이 있는, 한국에서 가장 큰 사마귀는?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" data-correct="false" onclick="answerQuiz(this,false)">좀사마귀</button>
+        <button class="quiz-opt" data-correct="false" onclick="answerQuiz(this,false)">애기사마귀</button>
+        <button class="quiz-opt" data-correct="false" onclick="answerQuiz(this,false)">항라사마귀</button>
+        <button class="quiz-opt" data-correct="true" onclick="answerQuiz(this,true)">왕사마귀</button>
+      </div>
+      <div class="quiz-feedback">정답은 <strong>왕사마귀</strong>! 몸길이가 70~95mm까지 자라는, 한국에서 가장 크고 흔한 사마귀예요.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q"><span class="qn">Q4.</span> 짝짓기를 마친 뒤, 사마귀 암컷이 가끔 하는 행동은?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" data-correct="false" onclick="answerQuiz(this,false)">노래를 부른다</button>
+        <button class="quiz-opt" data-correct="true" onclick="answerQuiz(this,true)">수컷을 잡아먹는다</button>
+        <button class="quiz-opt" data-correct="false" onclick="answerQuiz(this,false)">색깔이 변한다</button>
+        <button class="quiz-opt" data-correct="false" onclick="answerQuiz(this,false)">겨울잠을 잔다</button>
+      </div>
+      <div class="quiz-feedback">정답은 <strong>수컷을 잡아먹는다</strong>예요! 놀랍지만 사실이에요. 더 많은 영양분을 얻어 알을 잘 낳기 위한 습성이라고 해요.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q"><span class="qn">Q5.</span> 옛날 한의학에서 사마귀 알집을 부르던 약재 이름은?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" data-correct="false" onclick="answerQuiz(this,false)">청심환</button>
+        <button class="quiz-opt" data-correct="true" onclick="answerQuiz(this,true)">상표초</button>
+        <button class="quiz-opt" data-correct="false" onclick="answerQuiz(this,false)">우황환</button>
+        <button class="quiz-opt" data-correct="false" onclick="answerQuiz(this,false)">사향</button>
+      </div>
+      <div class="quiz-feedback">정답은 <strong>상표초</strong>! 『동의보감』에도 실려 있는, 사마귀 알집을 삶아 말려 만든 약재예요.</div>
+    </div>
+
+    <button class="quiz-reset sans" onclick="resetQuiz()">처음부터 다시 풀기</button>
+  </div>
+
   <div class="colophon">
     <strong>이건곤충뉴스</strong> · 사마귀 특집호 · 본지는 공개된 생태 정보와 고전 문헌을 바탕으로 재구성한 교양 특집으로, 실제 취재를 대신하는 학술 자료가 아닙니다.
   </div>
 
 </div>
+<script>
+  let quizScore = 0;
+
+  function answerQuiz(btn, isCorrect){
+    const item = btn.closest('.quiz-item');
+    if(item.classList.contains('answered')) return;
+    item.classList.add('answered');
+
+    item.querySelectorAll('.quiz-opt').forEach(opt=>{
+      opt.disabled = true;
+      if(opt.dataset.correct === 'true'){ opt.classList.add('correct'); }
+    });
+    if(!isCorrect){ btn.classList.add('wrong'); }
+
+    item.querySelector('.quiz-feedback').classList.add('show');
+
+    if(isCorrect){
+      quizScore++;
+      document.getElementById('quiz-score-num').textContent = quizScore;
+    }
+  }
+
+  function resetQuiz(){
+    quizScore = 0;
+    document.getElementById('quiz-score-num').textContent = 0;
+    document.querySelectorAll('.quiz-item').forEach(item=>{
+      item.classList.remove('answered');
+      item.querySelectorAll('.quiz-opt').forEach(opt=>{
+        opt.disabled = false;
+        opt.classList.remove('correct','wrong');
+      });
+      item.querySelector('.quiz-feedback').classList.remove('show');
+    });
+  }
+</script>
 </body>
 </html>
