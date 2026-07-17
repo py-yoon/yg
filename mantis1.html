@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이건곤충뉴스 — 낫을 든 사냥꾼들</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700;900&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F5F0E4;
+    --paper-deep:#EFE8D8;
+    --ink:#1c1a15;
+    --ink-soft:#4b463d;
+    --rule:#1c1a15;
+    --green:#2f4a37;
+    --green-soft:#5c7563;
+    --gold:#9c8148;
+    --card:#FBF8EF;
+    --shadow: rgba(28,26,21,0.12);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Noto Serif KR', serif;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--green); color:var(--paper);}
+
+  .sans{font-family:'Noto Sans KR', sans-serif;}
+
+  .page{
+    max-width:1040px;
+    margin:0 auto;
+    padding:28px 24px 80px;
+  }
+
+  /* ---------- Masthead ---------- */
+  .topbar{
+    display:flex;
+    justify-content:space-between;
+    font-family:'Noto Sans KR', sans-serif;
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    border-bottom:1px solid var(--ink);
+    padding-bottom:8px;
+    margin-bottom:14px;
+  }
+  .masthead{
+    text-align:center;
+    padding:6px 0 10px;
+    border-bottom:4px double var(--ink);
+    margin-bottom:10px;
+  }
+  .masthead h1{
+    font-family:'Noto Serif KR', serif;
+    font-weight:900;
+    font-size:clamp(40px, 8vw, 74px);
+    letter-spacing:.02em;
+    margin:0;
+  }
+  .masthead .tagline{
+    font-family:'Noto Sans KR', sans-serif;
+    font-size:11px;
+    letter-spacing:.3em;
+    color:var(--ink-soft);
+    margin-top:2px;
+  }
+  .editionbar{
+    display:flex;
+    justify-content:space-between;
+    font-family:'Noto Sans KR', sans-serif;
+    font-size:11px;
+    letter-spacing:.06em;
+    color:var(--ink-soft);
+    border-bottom:1px solid var(--ink);
+    padding-bottom:8px;
+    margin-bottom:26px;
+  }
+
+  /* ---------- Headline block ---------- */
+  .eyebrow{
+    font-family:'Noto Sans KR', sans-serif;
+    font-weight:700;
+    font-size:12px;
+    letter-spacing:.16em;
+    color:var(--green);
+    text-transform:uppercase;
+    margin-bottom:10px;
+  }
+  h2.headline{
+    font-size:clamp(30px, 5vw, 50px);
+    line-height:1.18;
+    margin:0 0 14px;
+    font-weight:700;
+    max-width:900px;
+  }
+  .deck{
+    font-size:19px;
+    font-style:italic;
+    color:var(--ink-soft);
+    max-width:760px;
+    margin:0 0 16px;
+    line-height:1.55;
+  }
+  .byline{
+    font-family:'Noto Sans KR', sans-serif;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    border-top:1px solid var(--ink);
+    border-bottom:1px solid var(--ink);
+    padding:9px 0;
+    margin-bottom:28px;
+    display:flex;
+    gap:18px;
+    flex-wrap:wrap;
+  }
+
+  /* ---------- Body ---------- */
+  .lede{
+    columns:1;
+    margin-bottom:6px;
+  }
+  .lede p:first-of-type::first-letter{
+    font-family:'Noto Serif KR', serif;
+    font-weight:900;
+    font-size:64px;
+    float:left;
+    line-height:0.8;
+    padding:6px 8px 0 0;
+    color:var(--green);
+  }
+  .article-cols{
+    column-count:2;
+    column-gap:36px;
+    font-size:16px;
+    max-width:920px;
+    margin:0 auto 8px;
+  }
+  .article-cols p{ margin:0 0 14px; }
+
+  .pullquote{
+    break-inside:avoid;
+    border-top:1px solid var(--ink);
+    border-bottom:1px solid var(--ink);
+    padding:14px 0;
+    margin:8px 0 18px;
+    font-size:21px;
+    font-weight:600;
+    line-height:1.4;
+    color:var(--green);
+  }
+  .pullquote span{
+    display:block;
+    font-family:'Noto Sans KR',sans-serif;
+    font-weight:400;
+    font-size:11px;
+    letter-spacing:.05em;
+    color:var(--ink-soft);
+    margin-top:6px;
+  }
+
+  hr.section-rule{
+    border:none;
+    border-top:3px solid var(--ink);
+    margin:52px 0 6px;
+  }
+  .section-title{
+    text-align:center;
+    margin:0 0 6px;
+  }
+  .section-title .eyebrow{
+    text-align:center;
+    margin-bottom:4px;
+  }
+  .section-title h3{
+    font-size:clamp(26px,4vw,38px);
+    margin:0 0 6px;
+  }
+  .section-sub{
+    text-align:center;
+    font-style:italic;
+    color:var(--ink-soft);
+    max-width:640px;
+    margin:0 auto 30px;
+    font-size:15.5px;
+  }
+
+  /* ---------- Field guide ---------- */
+  .fieldguide{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(230px,1fr));
+    gap:2px;
+    background:var(--ink);
+    border:1px solid var(--ink);
+  }
+  .species-card{
+    background:var(--card);
+    padding:20px 18px 18px;
+    position:relative;
+  }
+  .species-card .no{
+    font-family:'Noto Sans KR',sans-serif;
+    font-size:11px;
+    color:var(--gold);
+    letter-spacing:.1em;
+    margin-bottom:6px;
+  }
+  .species-card h4{
+    margin:0 0 2px;
+    font-size:20px;
+  }
+  .species-card .latin{
+    font-style:italic;
+    color:var(--ink-soft);
+    font-size:12.5px;
+    margin-bottom:10px;
+    display:block;
+  }
+  .species-card p{
+    font-size:14px;
+    margin:0;
+    color:var(--ink);
+    line-height:1.6;
+  }
+  .species-card .mark{
+    display:inline-block;
+    margin-top:12px;
+    font-family:'Noto Sans KR',sans-serif;
+    font-size:10.5px;
+    letter-spacing:.06em;
+    color:var(--green);
+    border:1px solid var(--green-soft);
+    padding:3px 8px;
+    border-radius:2px;
+  }
+
+  /* ---------- Timeline ---------- */
+  .timeline{
+    max-width:760px;
+    margin:0 auto;
+    position:relative;
+    padding-left:26px;
+  }
+  .timeline::before{
+    content:"";
+    position:absolute;
+    left:5px; top:6px; bottom:6px;
+    width:1px;
+    background:var(--ink);
+  }
+  .tl-item{
+    position:relative;
+    padding:0 0 34px 20px;
+  }
+  .tl-item::before{
+    content:"";
+    position:absolute;
+    left:-25px; top:5px;
+    width:9px; height:9px;
+    border-radius:50%;
+    background:var(--paper);
+    border:2px solid var(--green);
+  }
+  .tl-year{
+    font-family:'Noto Sans KR',sans-serif;
+    font-weight:700;
+    font-size:12.5px;
+    letter-spacing:.06em;
+    color:var(--green);
+    margin-bottom:3px;
+  }
+  .tl-item h5{
+    margin:0 0 5px;
+    font-size:18px;
+  }
+  .tl-item p{
+    margin:0;
+    font-size:14.5px;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- Footer ---------- */
+  .colophon{
+    margin-top:60px;
+    border-top:4px double var(--ink);
+    padding-top:16px;
+    text-align:center;
+    font-family:'Noto Sans KR',sans-serif;
+    font-size:11px;
+    color:var(--ink-soft);
+    letter-spacing:.03em;
+  }
+  .colophon strong{ color:var(--ink); }
+
+  @media (max-width:640px){
+    .article-cols{ column-count:1; }
+    .editionbar,.topbar{ flex-direction:column; gap:3px; }
+    .timeline{ padding-left:20px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="topbar">
+    <span>2026년 7월 17일 금요일</span>
+    <span>제1호 · 자연과학 특집</span>
+    <span>비매품 · 곤충 전문지</span>
+  </div>
+
+  <div class="masthead">
+    <h1>이건곤충뉴스</h1>
+    <div class="tagline">THE INSECT JOURNAL OF RECORD · 발 없이도 걷고, 날개 없이도 소문나다</div>
+  </div>
+
+  <div class="editionbar">
+    <span class="sans">사마귀 특집호</span>
+    <span class="sans">들판의 사냥꾼 편</span>
+  </div>
+
+  <div class="eyebrow">특집 · 낫을 든 사냥꾼</div>
+  <h2 class="headline">한반도의 사마귀 7종, 그리고 그들이 3천 년간 남긴 발자국</h2>
+  <p class="deck">앞다리 두 개로 수레바퀴 앞을 막아선 벌레는 어쩌다 병법의 비유가 되고, 약재가 되고, 권법의 스승이 되었나 — 대한민국에 사는 사마귀의 생태와 그 이름이 역사 속을 지나온 길을 되짚는다.</p>
+  <div class="byline sans">
+    <span>곤충부 특별취재팀</span>
+    <span>사진 · 삽화 없음, 관찰과 문헌으로만 취재함</span>
+    <span>이건곤충뉴스 자연과학팀</span>
+  </div>
+
+  <div class="lede">
+    <p>풀숲 어딘가에서 삼각형 머리가 소리 없이 180도 돌아간다. 낫처럼 접힌 앞다리, 그리고 세상 무엇에도 물러서지 않을 것 같은 자세. 사마귀는 한국 어디서나 마주칠 수 있는 흔한 곤충이지만, 그 생김새와 습성은 예로부터 사람들의 눈길을 붙잡아 왔다. 논밭과 풀숲, 도심 화단까지 넓게 퍼져 사는 이 포식자는 단순한 여름 풀벌레가 아니라, 동아시아 고사성어와 전통 의서, 심지어 무술의 계보에까지 이름을 남긴 존재다.</p>
+  </div>
+
+  <div class="article-cols">
+    <p>사마귀는 곤충강 사마귀목(螳螂目)에 속하며 전 세계적으로 2,400여 종이 알려져 있다. 몸은 가늘고 길며 배 부분은 통통하고, 머리는 삼각형으로 뒤쪽까지 돌아가는 것이 특징이다. 앞다리는 톱니 같은 가시가 돋아 낫 모양으로 접히며, 이 앞다리로 먹이를 낚아채 사냥한다. 낮과 밤을 가리지 않고 활동하며, 눈의 색은 낮에는 광택 있는 녹색을 띠다가 밤이 되면 검은색으로 바뀐다.</p>
+    <p>짝짓기가 끝난 뒤 암컷이 수컷을 머리부터 잡아먹는 습성은 사마귀를 상징하는 장면으로 자주 언급된다. 이는 알을 더 많이, 더 건강하게 낳기 위한 영양 확보 전략으로 알려져 있으며, 수컷은 이를 피하기 위해 교미 직후 재빨리 달아나거나 죽은 척하는 회피 행동을 보이기도 한다.</p>
+    <p>사마귀는 파리, 모기, 메뚜기, 진딧물 같은 농업 해충을 잡아먹어 천적 곤충 역할을 하지만, 동시에 꿀벌이나 나비 같은 이로운 곤충도 가리지 않고 사냥한다는 점에서 생태계 안의 양면적인 포식자로 평가된다. 국내에는 7종의 사마귀가 알려져 있으며, 저마다 앞다리 사이의 점 색깔이나 날개 무늬, 몸의 형태로 구분된다.</p>
+    <div class="pullquote">
+      螳螂之怒臂 以當車轍 — 사마귀가 성난 앞발을 들어 수레바퀴 앞을 막아서다
+      <span>『장자(莊子)』 인간세편에 실린 비유, 이후 고사성어 ‘당랑거철(螳螂拒轍)’의 뿌리가 됨</span>
+    </div>
+    <p>재미있는 점은 같은 풀숲에 사는 여러 사마귀 종들이 서로 먹이 경쟁을 피하기 위해 부화 시기를 조금씩 어긋나게 진화해 왔다는 사실이다. 몸집이 가장 큰 왕사마귀가 가장 먼저 부화해 활동을 시작하면, 참사마귀는 그보다 조금 늦게 태어나 경쟁을 피한다. 최근에는 본래 남부 지방에 주로 서식하던 넓적배사마귀가 서울 등 중부 지방에서도 발견되는 등, 기후 변화에 따른 서식지 북상 현상도 관찰되고 있다.</p>
+  </div>
+
+  <!-- ================= FIELD GUIDE ================= -->
+  <hr class="section-rule">
+  <div class="section-title">
+    <div class="eyebrow">현장 도감</div>
+    <h3>대한민국의 사마귀 7종</h3>
+  </div>
+  <p class="section-sub">전 세계 1,500여 종 가운데 한반도에는 7종이 서식하는 것으로 알려져 있다. 앞다리 사이 점의 색과 날개, 몸의 형태로 구분한다.</p>
+
+  <div class="fieldguide">
+
+    <div class="species-card">
+      <div class="no">01</div>
+      <h4>왕사마귀</h4>
+      <span class="latin">Tenodera sinensis</span>
+      <p>한반도 최대종으로 몸길이 70~95mm에 이른다. 앞다리 사이의 점이 아이보리색인 것이 특징이며, 전국 어디서나 가장 흔하게 관찰된다. 사냥 실력과 공격성이 뛰어나 같은 풀숲의 다른 사마귀들이 꺼리는 상대다.</p>
+      <span class="mark">최다 개체수</span>
+    </div>
+
+    <div class="species-card">
+      <div class="no">02</div>
+      <h4>참사마귀 (사마귀)</h4>
+      <span class="latin">Tenodera angustipennis</span>
+      <p>정식 국명은 ‘사마귀’이나 왕사마귀와 구분하기 위해 참사마귀로도 불린다. 앞다리 사이의 점이 주황색이고 뒷날개에 옅은 갈색 무늬가 있어 구별된다. 왕사마귀보다 날씬하며, 왕사마귀와의 경쟁을 피해 부화 시기가 조금 늦다.</p>
+      <span class="mark">가장 헷갈리는 종</span>
+    </div>
+
+    <div class="species-card">
+      <div class="no">03</div>
+      <h4>좀사마귀</h4>
+      <span class="latin">Statilia maculata</span>
+      <p>소형종으로 몸 전체가 대체로 갈색을 띤다. 앞다리에 검은 점과 분홍빛 점이 함께 있는 것이 특징이다. 밤에 가로등 불빛으로 잘 모여드는 습성이 있어 도심에서도 자주 눈에 띈다.</p>
+      <span class="mark">불빛에 강함</span>
+    </div>
+
+    <div class="species-card">
+      <div class="no">04</div>
+      <h4>넓적배사마귀</h4>
+      <span class="latin">Hierodula patellifera</span>
+      <p>이름처럼 배가 짧고 편평해 다른 사마귀보다 통통한 인상을 준다. 큰 눈에 무늬가 있어 쉽게 구별되며 등에 한 쌍의 점이 있다. 원래 남부 지방 서식종이지만 최근 서울에서도 간간이 발견되는 등 북상 경향을 보인다.</p>
+      <span class="mark">북상 중인 종</span>
+    </div>
+
+    <div class="species-card">
+      <div class="no">05</div>
+      <h4>항라사마귀</h4>
+      <span class="latin">Mantis religiosa</span>
+      <p>앞다리의 점 무늬는 좀사마귀와 비슷하지만, 날개가 검지 않고 명주처럼 얇고 투명한 것이 가장 큰 구분점이다. 유럽과 세계 각지에 널리 분포하는 종과 같은 계통으로 알려져 있다.</p>
+      <span class="mark">실크빛 날개</span>
+    </div>
+
+    <div class="species-card">
+      <div class="no">06</div>
+      <h4>애기사마귀</h4>
+      <span class="latin">Amantis nawai</span>
+      <p>국내 사마귀 중 매우 작은 축에 속하며, 황토가 묻은 듯한 피부색을 지녔다. 주로 제주도를 비롯한 남부 지역에서 발견되며 개체 수가 적어 사육자들 사이에서도 귀한 대접을 받는다.</p>
+      <span class="mark">최소형급</span>
+    </div>
+
+    <div class="species-card">
+      <div class="no">07</div>
+      <h4>좁쌀사마귀</h4>
+      <span class="latin">Statilia spp.</span>
+      <p>날개가 퇴화해 없고 몸이 통통한 것이 특징인 희귀종이다. 관찰 기록과 개체 수 모두 적어 국내 7종 가운데 가장 만나기 어려운 종으로 꼽힌다.</p>
+      <span class="mark">희귀 관찰종</span>
+    </div>
+
+  </div>
+
+  <!-- ================= TIMELINE ================= -->
+  <hr class="section-rule">
+  <div class="section-title">
+    <div class="eyebrow">기록으로 본 사마귀</div>
+    <h3>사마귀, 역사 속을 누비다</h3>
+  </div>
+  <p class="section-sub">춘추시대의 수레바퀴 앞에서부터 오늘날의 도감과 다큐멘터리까지 — 사마귀라는 이름이 문헌 속을 지나온 궤적.</p>
+
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-year">기원전 7세기경 · 춘추시대</div>
+      <h5>제나라 장공, 수레를 막아선 벌레와 마주치다</h5>
+      <p>사냥을 나선 제나라 장공의 수레 앞에 사마귀 한 마리가 앞발을 들고 맞섰다는 일화가 전해진다. 마부에게서 그 벌레가 앞으로 나아갈 줄만 알고 물러설 줄 모른다는 설명을 들은 장공은 오히려 그 용맹함에 감탄해 수레를 돌려 피해 갔다고 한다. 이는 훗날 ‘당랑거철(螳螂拒轍)’이라는 말의 밑그림이 되었다.</p>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-year">전국시대 · 기원전 4세기경</div>
+      <h5>『장자』, 사마귀를 분수 모르는 만용의 비유로 쓰다</h5>
+      <p>『장자』 인간세편과 산목편에는 사마귀가 앞발을 벌리고 수레바퀴 앞에 버티고 선 모습이, 자기 힘을 헤아리지 못하고 거대한 상대에 맞서는 것에 대한 비유로 등장한다. 같은 소재가 같은 시기 여러 문헌에서 서로 다른 교훈으로 변주된 셈이다.</p>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-year">전한시대 · 유향의 『설원』</div>
+      <h5>매미를 노리다 참새를 놓치는 사마귀 이야기가 정치 교훈이 되다</h5>
+      <p>오나라 왕이 다른 나라를 치려 하자, 신하들은 사마귀가 매미를 잡으려는 데만 몰두하다 뒤에서 노리는 참새를 보지 못하는 이야기를 들어 눈앞의 이익만 좇는 위험을 간했다고 전해진다. 이 고사는 ‘당랑규선(螳螂窺蟬)’, ‘황작재후(黃雀在後)’ 등의 표현으로 오늘날까지 쓰인다.</p>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-year">1613년 · 조선</div>
+      <h5>허준의 『동의보감』, 사마귀 알집을 약재로 기록하다</h5>
+      <p>허준이 편찬한 『동의보감』을 비롯한 전통 의서들은 사마귀의 알집을 ‘상표초(桑螵蛸)’라는 이름의 약재로 다뤘다. 알집을 삶아 말려 사용했으며, 정력과 배뇨 관련 증상을 다스리는 데 쓰인 것으로 기록되어 있다.</p>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-year">명말~청초 · 중국 산둥성</div>
+      <h5>사마귀의 몸짓에서 권법이 태어나다</h5>
+      <p>명나라 말기 무관을 뽑는 시험 기록에는 산둥성 래양현 출신 무사들의 무술이 ‘당랑권(螳螂拳)’으로 언급되어 있다. 훗날 청나라 초기의 인물 왕랑이 사마귀가 매미를 덮치는 자세에서 영감을 얻어 이 권법을 정리했다는 이야기가 전설처럼 전해진다.</p>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-year">1879~1907년 · 프랑스</div>
+      <h5>파브르, 사마귀의 사냥과 짝짓기를 관찰 기록으로 남기다</h5>
+      <p>앙리 파브르는 평생에 걸쳐 쓴 『곤충기』 전 10권 가운데 한 권을 사마귀의 사냥, 짝짓기, 알집, 부화 과정에 할애했다. 그의 세밀한 관찰기는 이후 세계 각국에 번역되며 사마귀의 습성을 대중에게 널리 알리는 계기가 되었다.</p>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-year">1929년 · 중국 상하이</div>
+      <h5>당랑권, 무술 대회를 통해 대중적으로 알려지다</h5>
+      <p>당랑권 계승자의 제자가 상하이에서 열린 실전 권법 대회에 참가해 우승을 거두자 현지 신문들이 이를 보도하며 당랑권이라는 이름이 일반 대중에게도 널리 알려지기 시작했다.</p>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-year">1999년 · 대한민국</div>
+      <h5>『파브르 곤충기』, 국내 최초로 완역되다</h5>
+      <p>원로 학자들의 오랜 작업 끝에 파브르의 『곤충기』 프랑스어 원본 10권이 국내에서 처음으로 완역, 출간되었다. 사마귀 관찰기를 포함한 이 완역본은 이후 국내 자연과학 교양서와 어린이용 도감의 바탕이 되었다.</p>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-year">오늘날 · 대한민국</div>
+      <h5>도심의 풀숲까지 — 계속되는 관찰기</h5>
+      <p>기후 변화로 넓적배사마귀 같은 남부 서식종이 중부 지방에서도 관찰되는 등, 사마귀의 서식 범위는 지금도 조금씩 움직이고 있다. 자연 다큐멘터리와 도감, 곤충 사육 커뮤니티를 통해 사마귀에 대한 관찰과 기록은 오늘도 이어지는 중이다.</p>
+    </div>
+
+  </div>
+
+  <div class="colophon">
+    <strong>이건곤충뉴스</strong> · 사마귀 특집호 · 본지는 공개된 생태 정보와 고전 문헌을 바탕으로 재구성한 교양 특집으로, 실제 취재를 대신하는 학술 자료가 아닙니다.
+  </div>
+
+</div>
+</body>
+</html>
