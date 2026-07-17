@@ -240,7 +240,7 @@
   </div>
 
   <footer>
-    데이터 출처: Yahoo Finance(비공식 공개 API), 실시간이 아닌 지연 시세일 수 있습니다 · 본 페이지는 정보 제공 목적이며 투자 판단의 근거로 사용할 수 없습니다 · 정적 웹페이지 특성상 공개 CORS 프록시를 통해 데이터를 가져오며, 프록시 상태에 따라 일시적으로 갱신이 실패할 수 있습니다.
+    데이터 출처: Yahoo Finance(비공식 API) · 자체 Cloudflare Worker(hynix-proxy)를 통해 CORS 문제 없이 데이터를 가져옵니다 · 실시간이 아닌 지연 시세일 수 있으며, 본 페이지는 정보 제공 목적으로 투자 판단의 근거로 사용할 수 없습니다 · 워커가 일시적으로 응답하지 않을 경우 공개 백업 프록시로 자동 전환됩니다.
   </footer>
 
 </div>
@@ -254,16 +254,22 @@
     return n.toLocaleString('ko-KR', { maximumFractionDigits: digits, minimumFractionDigits: digits });
   }
 
+  // 내 Cloudflare Worker (hynix-proxy) — Yahoo Finance를 대신 호출해 CORS 허용해서 돌려줌
+  const WORKER_BASE = 'https://hynix-proxy.6h2lo.workers.dev/';
+
   function buildTargetUrl(symbol){
+    return `${WORKER_BASE}?symbol=${encodeURIComponent(symbol)}&interval=1d&range=5d`;
+  }
+  function buildYahooDirectUrl(symbol){
     return `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=5d`;
   }
 
   async function fetchYahoo(symbol){
-    const target = buildTargetUrl(symbol);
+    // 1순위: 내 워커 / 2순위(백업): 공개 프록시들 — 워커가 잠깐 응답 없을 때 대비
     const attempts = [
-      target,
-      `https://api.allorigins.win/raw?url=${encodeURIComponent(target)}`,
-      `https://corsproxy.io/?url=${encodeURIComponent(target)}`,
+      buildTargetUrl(symbol),
+      `https://api.allorigins.win/raw?url=${encodeURIComponent(buildYahooDirectUrl(symbol))}`,
+      `https://corsproxy.io/?url=${encodeURIComponent(buildYahooDirectUrl(symbol))}`,
     ];
     let lastErr = null;
     for(const url of attempts){
@@ -271,6 +277,7 @@
         const res = await fetch(url, { cache:'no-store' });
         if(!res.ok) throw new Error('HTTP ' + res.status);
         const json = await res.json();
+        if(json && json.error) throw new Error(json.error);
         const result = json && json.chart && json.chart.result && json.chart.result[0];
         if(!result || !result.meta) throw new Error('빈 응답');
         return result;
