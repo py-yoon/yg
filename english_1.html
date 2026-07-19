@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>품사 탐험대 - 영어 품사 100문제</title>
+<style>
+  :root{
+    --bg1:#fff6e9;
+    --bg2:#eaf7ff;
+    --ink:#2b2a3a;
+    --card:#ffffff;
+    --line:#eee2cf;
+    --accent:#ff8a3d;
+    --accent2:#3d9dff;
+    --good:#3fb27f;
+    --bad:#e8564d;
+    --shadow: 0 10px 30px rgba(43,42,58,0.08);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+    background:
+      radial-gradient(circle at 10% 10%, var(--bg2), transparent 40%),
+      radial-gradient(circle at 90% 20%, #fff0e0, transparent 45%),
+      var(--bg1);
+    color:var(--ink);
+    min-height:100vh;
+    padding:24px 14px 60px;
+  }
+  .wrap{max-width:640px;margin:0 auto;}
+
+  header{
+    text-align:center;
+    margin-bottom:18px;
+  }
+  .title-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:#fff;
+    border:2px solid var(--accent);
+    color:var(--accent);
+    font-weight:800;
+    padding:6px 16px;
+    border-radius:999px;
+    font-size:13px;
+    letter-spacing:0.5px;
+    margin-bottom:10px;
+  }
+  h1{
+    font-size:26px;
+    margin:6px 0 4px;
+    letter-spacing:-0.5px;
+  }
+  .sub{
+    color:#8a8496;
+    font-size:14px;
+  }
+
+  .stats{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:20px 0 10px;
+    font-size:14px;
+    color:#6f6a7d;
+    font-weight:600;
+  }
+  .stats .score{color:var(--good);}
+
+  .progress-track{
+    height:10px;
+    background:#f1e7d8;
+    border-radius:999px;
+    overflow:hidden;
+    margin-bottom:22px;
+  }
+  .progress-fill{
+    height:100%;
+    background:linear-gradient(90deg, var(--accent2), var(--accent));
+    width:1%;
+    transition:width .35s ease;
+    border-radius:999px;
+  }
+
+  .card{
+    background:var(--card);
+    border-radius:22px;
+    padding:28px 24px 24px;
+    box-shadow:var(--shadow);
+    border:1px solid var(--line);
+  }
+
+  .qno{
+    font-size:13px;
+    font-weight:800;
+    color:var(--accent2);
+    margin-bottom:10px;
+    letter-spacing:0.5px;
+  }
+  .sentence{
+    font-size:22px;
+    line-height:1.55;
+    font-weight:600;
+    margin-bottom:6px;
+  }
+  .sentence b, .sentence .tw{
+    color:var(--accent);
+    background:#fff1e2;
+    padding:1px 8px;
+    border-radius:8px;
+    border-bottom:3px solid var(--accent);
+  }
+  .prompt{
+    font-size:14.5px;
+    color:#8a8496;
+    margin-bottom:20px;
+  }
+
+  .options{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:6px;
+  }
+  .opt{
+    padding:13px 10px;
+    border-radius:14px;
+    border:2px solid #eee2cf;
+    background:#fffdfa;
+    font-size:15.5px;
+    font-weight:700;
+    color:var(--ink);
+    cursor:pointer;
+    text-align:center;
+    transition:transform .12s ease, border-color .12s ease, background .12s ease;
+    user-select:none;
+  }
+  .opt:hover{border-color:var(--accent2); transform:translateY(-1px);}
+  .opt.correct{
+    background:#e9faf1;
+    border-color:var(--good);
+    color:#1d8a5c;
+  }
+  .opt.wrong{
+    background:#fdecea;
+    border-color:var(--bad);
+    color:#c2352c;
+  }
+  .opt.dim{opacity:0.55; cursor:default;}
+  .opt.locked{cursor:default;}
+
+  .feedback{
+    margin-top:18px;
+    padding:16px 18px;
+    border-radius:14px;
+    font-size:14.5px;
+    line-height:1.6;
+    display:none;
+  }
+  .feedback.show{display:block; animation:pop .25s ease;}
+  .feedback.right{background:#eefaf3; border:1.5px solid var(--good); color:#1d6b4a;}
+  .feedback.wrongbox{background:#fdecea; border:1.5px solid var(--bad); color:#8f261e;}
+  .feedback .tag{
+    display:inline-block;
+    font-weight:800;
+    margin-bottom:6px;
+    font-size:13.5px;
+  }
+  @keyframes pop{
+    from{opacity:0; transform:translateY(4px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  .nav{
+    display:flex;
+    justify-content:space-between;
+    margin-top:22px;
+    gap:10px;
+  }
+  .nav button{
+    flex:1;
+    padding:13px;
+    border-radius:14px;
+    border:none;
+    font-weight:800;
+    font-size:15px;
+    cursor:pointer;
+  }
+  #prevBtn{
+    background:#f1ede4;
+    color:#7a7568;
+  }
+  #nextBtn{
+    background:var(--ink);
+    color:#fff;
+  }
+  #nextBtn:disabled, #prevBtn:disabled{
+    opacity:0.4;
+    cursor:not-allowed;
+  }
+
+  .legend{
+    margin-top:22px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    justify-content:center;
+  }
+  .legend span{
+    font-size:11.5px;
+    background:#fff;
+    border:1px solid var(--line);
+    padding:4px 10px;
+    border-radius:999px;
+    color:#9a927f;
+  }
+
+  .done{
+    text-align:center;
+    padding:40px 20px;
+  }
+  .done h2{font-size:24px; margin-bottom:8px;}
+  .done .bigscore{
+    font-size:48px;
+    font-weight:900;
+    color:var(--accent);
+    margin:14px 0;
+  }
+  .restart{
+    margin-top:18px;
+    padding:13px 26px;
+    border-radius:14px;
+    border:none;
+    background:var(--accent2);
+    color:#fff;
+    font-weight:800;
+    cursor:pointer;
+    font-size:15px;
+  }
+
+  @media(max-width:420px){
+    .sentence{font-size:19px;}
+    .options{grid-template-columns:1fr 1fr;}
+    .opt{font-size:14px; padding:12px 6px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="title-badge">📚 품사 탐험대</div>
+    <h1>영어 품사 100문제</h1>
+    <div class="sub">밑줄(색칠) 친 낱말이 어떤 품사인지 맞혀 보세요!</div>
+  </header>
+
+  <div class="stats">
+    <div id="qCounter">문제 1 / 100</div>
+    <div class="score">맞은 개수: <span id="scoreNum">0</span></div>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+  <div class="card" id="quizCard">
+    <div class="qno" id="qno">QUESTION 1</div>
+    <div class="sentence" id="sentence"></div>
+    <div class="prompt">색칠된 낱말은 어떤 품사일까요?</div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="nav">
+      <button id="prevBtn">← 이전</button>
+      <button id="nextBtn" disabled>다음 →</button>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span>명사</span><span>대명사</span><span>동사</span><span>형용사</span>
+    <span>부사</span><span>전치사</span><span>접속사</span><span>감탄사</span>
+  </div>
+</div>
+
+<script>
+const POS = ["명사","대명사","동사","형용사","부사","전치사","접속사","감탄사"];
+
+const quizData = [
+{s:"I have a small <b>dog</b>.", a:"명사", e:"dog는 강아지라는 동물의 이름을 나타내는 말이에요. 사람, 동물, 사물, 장소의 이름을 나타내는 낱말을 명사라고 해요."},
+{s:"<b>I</b> like ice cream.", a:"대명사", e:"I는 '나'를 가리키는 말로, 이름(명사) 대신 쓰는 대명사예요."},
+{s:"The boy <b>runs</b> fast.", a:"동사", e:"runs는 '달리다'라는 움직임을 나타내는 동사예요."},
+{s:"She is a <b>happy</b> girl.", a:"형용사", e:"happy는 girl(소녀)이 어떤 상태인지 꾸며주는 형용사예요."},
+{s:"He runs <b>quickly</b>.", a:"부사", e:"quickly는 동사 runs를 꾸며주어 '어떻게' 달리는지 설명하는 부사예요."},
+{s:"The cat is <b>in</b> the box.", a:"전치사", e:"in은 고양이가 상자 '안에' 있다는 위치 관계를 나타내는 전치사예요."},
+{s:"I like apples <b>and</b> bananas.", a:"접속사", e:"and는 apples와 bananas라는 두 낱말을 이어주는 접속사예요."},
+{s:"<b>Wow</b>! That is amazing!", a:"감탄사", e:"Wow는 놀라움을 표현하는 감탄사예요."},
+{s:"She goes to <b>school</b> every day.", a:"명사", e:"school은 학교라는 장소의 이름을 나타내는 명사예요."},
+{s:"<b>You</b> are my best friend.", a:"대명사", e:"You는 상대방을 가리키는 대명사예요."},
+{s:"She <b>is</b> happy.", a:"동사", e:"is는 '~이다'라는 상태를 나타내는 동사(be동사)예요."},
+{s:"He is a <b>tall</b> boy.", a:"형용사", e:"tall은 boy가 키가 크다는 것을 꾸며주는 형용사예요."},
+{s:"The turtle walks <b>slowly</b>.", a:"부사", e:"slowly는 동사 walks를 꾸며주어 '느리게' 걷는다는 것을 설명하는 부사예요."},
+{s:"The book is <b>on</b> the table.", a:"전치사", e:"on은 책이 탁자 '위에' 있다는 위치를 나타내는 전치사예요."},
+{s:"She is small <b>but</b> strong.", a:"접속사", e:"but은 small과 strong이라는 서로 다른 내용을 이어주는 접속사예요."},
+{s:"<b>Oh</b>! I forgot my bag.", a:"감탄사", e:"Oh는 놀라거나 아쉬운 감정을 나타내는 감탄사예요."},
+{s:"He is reading a <b>book</b>.", a:"명사", e:"book은 책이라는 사물의 이름을 나타내는 명사예요."},
+{s:"<b>He</b> plays soccer well.", a:"대명사", e:"He는 남자를 가리키는 대명사예요."},
+{s:"I <b>have</b> two brothers.", a:"동사", e:"have는 '가지고 있다'는 뜻의 동사예요."},
+{s:"I have a <b>small</b> dog.", a:"형용사", e:"small은 dog가 작다는 것을 꾸며주는 형용사예요."},
+{s:"She sings <b>well</b>.", a:"부사", e:"well은 동사 sings를 꾸며주어 '잘' 노래한다는 것을 설명하는 부사예요."},
+{s:"We meet <b>at</b> noon.", a:"전치사", e:"at은 만나는 시간(정오)을 나타내는 전치사예요."},
+{s:"Do you want tea <b>or</b> coffee?", a:"접속사", e:"or는 tea와 coffee 중 하나를 고르게 해주는 접속사예요."},
+{s:"<b>Ouch</b>! That hurts!", a:"감탄사", e:"Ouch는 아플 때 나오는 감탄사예요."},
+{s:"The <b>sun</b> is very bright.", a:"명사", e:"sun은 해라는 사물의 이름을 나타내는 명사예요."},
+{s:"<b>She</b> sings beautifully.", a:"대명사", e:"She는 여자를 가리키는 대명사예요."},
+{s:"We <b>eat</b> lunch at noon.", a:"동사", e:"eat은 '먹다'라는 동작을 나타내는 동사예요."},
+{s:"The sky is <b>blue</b>.", a:"형용사", e:"blue는 sky(하늘)의 색깔을 나타내는 형용사예요."},
+{s:"The dog barked <b>loudly</b>.", a:"부사", e:"loudly는 동사 barked를 꾸며주어 '크게' 짖었다는 것을 설명하는 부사예요."},
+{s:"The ball is <b>under</b> the chair.", a:"전치사", e:"under는 공이 의자 '아래에' 있다는 위치를 나타내는 전치사예요."},
+{s:"I stayed home <b>because</b> it rained.", a:"접속사", e:"because는 집에 있었던 이유를 설명해주는 접속사예요."},
+{s:"<b>Hooray</b>! We won the game!", a:"감탄사", e:"Hooray는 기쁨을 나타내는 감탄사예요."},
+{s:"My <b>teacher</b> is kind.", a:"명사", e:"teacher는 선생님이라는 사람의 이름을 나타내는 명사예요."},
+{s:"<b>It</b> is raining outside.", a:"대명사", e:"It은 날씨처럼 뚜렷하지 않은 대상을 가리킬 때 쓰는 대명사예요."},
+{s:"The baby <b>sleeps</b> a lot.", a:"동사", e:"sleeps는 '자다'라는 동작을 나타내는 동사예요."},
+{s:"The soup is <b>hot</b>.", a:"형용사", e:"hot은 soup(수프)이 뜨겁다는 상태를 나타내는 형용사예요."},
+{s:"Please speak <b>quietly</b>.", a:"부사", e:"quietly는 동사 speak를 꾸며주어 '조용히' 말하라는 것을 설명하는 부사예요."},
+{s:"I go to school <b>with</b> my friend.", a:"전치사", e:"with는 친구'와 함께'라는 관계를 나타내는 전치사예요."},
+{s:"It was late, <b>so</b> I went to bed.", a:"접속사", e:"so는 늦었다는 이유로 생긴 결과를 이어주는 접속사예요."},
+{s:"<b>Oops</b>! I made a mistake.", a:"감탄사", e:"Oops는 실수했을 때 나오는 감탄사예요."},
+{s:"I ate a red <b>apple</b>.", a:"명사", e:"apple은 사과라는 사물의 이름을 나타내는 명사예요."},
+{s:"<b>We</b> went to the park.", a:"대명사", e:"We는 '우리'를 가리키는 대명사예요."},
+{s:"The rabbit <b>jumps</b> high.", a:"동사", e:"jumps는 '뛰다'라는 동작을 나타내는 동사예요."},
+{s:"Winter is <b>cold</b>.", a:"형용사", e:"cold는 winter(겨울)의 날씨가 춥다는 상태를 나타내는 형용사예요."},
+{s:"I <b>often</b> visit my grandmother.", a:"부사", e:"often은 동사 visit을 꾸며주어 '자주' 방문한다는 것을 설명하는 부사예요."},
+{s:"We talked <b>about</b> the movie.", a:"전치사", e:"about은 영화에 '대해' 이야기했다는 관계를 나타내는 전치사예요."},
+{s:"<b>Although</b> it was cold, we went out.", a:"접속사", e:"Although는 추운 날씨에도 불구하고 나갔다는 두 내용을 이어주는 접속사예요."},
+{s:"<b>Yay</b>! It's my birthday!", a:"감탄사", e:"Yay는 기쁨을 나타내는 감탄사예요."},
+{s:"The <b>river</b> is long.", a:"명사", e:"river는 강이라는 장소(자연물)의 이름을 나타내는 명사예요."},
+{s:"<b>They</b> live in Seoul.", a:"대명사", e:"They는 '그들'을 가리키는 대명사예요."},
+{s:"She <b>sings</b> every morning.", a:"동사", e:"sings는 '노래하다'라는 동작을 나타내는 동사예요."},
+{s:"The flower is <b>beautiful</b>.", a:"형용사", e:"beautiful은 flower(꽃)가 아름답다는 것을 꾸며주는 형용사예요."},
+{s:"She <b>always</b> smiles.", a:"부사", e:"always는 동사 smiles를 꾸며주어 '항상' 웃는다는 것을 설명하는 부사예요."},
+{s:"She walked <b>to</b> the store.", a:"전치사", e:"to는 가게'로' 걸어갔다는 방향을 나타내는 전치사예요."},
+{s:"<b>If</b> you study hard, you will pass.", a:"접속사", e:"If는 조건을 나타내며 두 문장을 이어주는 접속사예요."},
+{s:"<b>Hey</b>! Look over there!", a:"감탄사", e:"Hey는 누군가를 부르거나 주의를 끌 때 쓰는 감탄사예요."},
+{s:"<b>London</b> is a big city.", a:"명사", e:"London은 도시 이름을 나타내는 명사(고유명사)예요."},
+{s:"<b>This</b> is my pencil.", a:"대명사", e:"This는 가까이 있는 물건을 가리키는 대명사예요."},
+{s:"He <b>swims</b> in the pool.", a:"동사", e:"swims는 '수영하다'라는 동작을 나타내는 동사예요."},
+{s:"My friend is <b>kind</b>.", a:"형용사", e:"kind는 friend(친구)가 친절하다는 것을 꾸며주는 형용사예요."},
+{s:"He <b>never</b> lies.", a:"부사", e:"never는 동사 lies를 꾸며주어 '결코 ~하지 않는다'는 것을 설명하는 부사예요."},
+{s:"He is <b>from</b> Korea.", a:"전치사", e:"from은 한국 '출신'이라는 것을 나타내는 전치사예요."},
+{s:"I clean my room <b>when</b> I wake up.", a:"접속사", e:"when은 일어나는 때와 방 청소하는 일을 이어주는 접속사예요."},
+{s:"<b>Ugh</b>! I don't like this.", a:"감탄사", e:"Ugh는 싫음이나 불편한 감정을 나타내는 감탄사예요."},
+{s:"My <b>family</b> is happy.", a:"명사", e:"family는 가족이라는 사람들의 이름을 나타내는 명사예요."},
+{s:"<b>That</b> is a big tree.", a:"대명사", e:"That은 멀리 있는 것을 가리키는 대명사예요."},
+{s:"I <b>read</b> a book every night.", a:"동사", e:"read는 '읽다'라는 동작을 나타내는 동사예요."},
+{s:"The elephant is <b>big</b>.", a:"형용사", e:"big은 elephant(코끼리)가 크다는 것을 꾸며주는 형용사예요."},
+{s:"The movie was <b>very</b> fun.", a:"부사", e:"very는 형용사 fun을 꾸며주어 '아주' 재미있다는 것을 강조하는 부사예요."},
+{s:"The dog is <b>behind</b> the door.", a:"전치사", e:"behind는 개가 문 '뒤에' 있다는 위치를 나타내는 전치사예요."},
+{s:"She listens to music <b>while</b> she studies.", a:"접속사", e:"while은 두 가지 일이 동시에 일어남을 이어주는 접속사예요."},
+{s:"<b>Bravo</b>! Great job!", a:"감탄사", e:"Bravo는 칭찬이나 감탄을 나타내는 감탄사예요."},
+{s:"He bought a new <b>computer</b>.", a:"명사", e:"computer는 컴퓨터라는 사물의 이름을 나타내는 명사예요."},
+{s:"<b>Who</b> is your teacher?", a:"대명사", e:"Who는 사람을 물어볼 때 쓰는 대명사예요."},
+{s:"She <b>writes</b> a letter.", a:"동사", e:"writes는 '쓰다'라는 동작을 나타내는 동사예요."},
+{s:"The car is <b>fast</b>.", a:"형용사", e:"fast는 car(자동차)가 빠르다는 것을 꾸며주는 형용사예요."},
+{s:"I am <b>really</b> tired.", a:"부사", e:"really는 형용사 tired를 꾸며주어 '정말' 피곤하다는 것을 강조하는 부사예요."},
+{s:"The bank is <b>next to</b> the bakery.", a:"전치사", e:"next to는 은행이 빵집 '옆에' 있다는 위치를 나타내는 전치사예요."},
+{s:"Wash your hands <b>before</b> you eat.", a:"접속사", e:"before는 손 씻는 일과 밥 먹는 일의 순서를 이어주는 접속사예요."},
+{s:"<b>Alas</b>! The team lost.", a:"감탄사", e:"Alas는 슬픔이나 아쉬움을 나타내는 감탄사예요."},
+{s:"We planted flowers in the <b>garden</b>.", a:"명사", e:"garden은 정원이라는 장소의 이름을 나타내는 명사예요."},
+{s:"This bag is <b>mine</b>.", a:"대명사", e:"mine은 '나의 것'을 나타내는 대명사예요."},
+{s:"The children <b>play</b> soccer.", a:"동사", e:"play는 '놀다, 운동하다'라는 동작을 나타내는 동사예요."},
+{s:"This cake is <b>delicious</b>.", a:"형용사", e:"delicious는 cake(케이크)가 맛있다는 것을 꾸며주는 형용사예요."},
+{s:"I met him <b>yesterday</b>.", a:"부사", e:"yesterday는 동사 met을 꾸며주어 '언제' 만났는지 설명하는 부사예요."},
+{s:"The ball is <b>between</b> the two boxes.", a:"전치사", e:"between은 공이 두 상자 '사이에' 있다는 위치를 나타내는 전치사예요."},
+{s:"I have known her <b>since</b> we were kids.", a:"접속사", e:"since는 과거부터 지금까지 이어지는 시간을 나타내는 접속사예요."},
+{s:"<b>Well</b>, I am not sure.", a:"감탄사", e:"Well은 망설이거나 생각할 때 쓰는 감탄사예요."},
+{s:"Today is my <b>birthday</b>.", a:"명사", e:"birthday는 생일이라는 날의 이름을 나타내는 명사예요."},
+{s:"<b>Someone</b> left a message.", a:"대명사", e:"Someone은 누구인지 정확히 모르는 사람을 가리키는 대명사예요."},
+{s:"My mom <b>cooks</b> dinner.", a:"동사", e:"cooks는 '요리하다'라는 동작을 나타내는 동사예요."},
+{s:"The knight was <b>brave</b>.", a:"형용사", e:"brave는 knight(기사)가 용감하다는 것을 꾸며주는 형용사예요."},
+{s:"Please come <b>here</b>.", a:"부사", e:"here는 동사 come을 꾸며주어 '이곳으로' 오라는 장소를 설명하는 부사예요."},
+{s:"We played outside <b>during</b> the break.", a:"전치사", e:"during은 쉬는 시간 '동안'이라는 것을 나타내는 전치사예요."},
+{s:"I think <b>that</b> she is right.", a:"접속사", e:"that은 두 문장을 이어주는 접속사예요."},
+{s:"<b>Aha</b>! I found it!", a:"감탄사", e:"Aha는 무언가를 깨달았을 때 나오는 감탄사예요."},
+{s:"The <b>snow</b> is white.", a:"명사", e:"snow는 눈이라는 자연물의 이름을 나타내는 명사예요."},
+{s:"They <b>dance</b> at the party.", a:"동사", e:"dance는 '춤추다'라는 동작을 나타내는 동사예요."},
+{s:"I brush my teeth <b>after</b> dinner.", a:"전치사", e:"after는 저녁 식사 '이후'라는 시간 관계를 나타내는 전치사예요."},
+{s:"You can't go out <b>unless</b> you finish homework.", a:"접속사", e:"unless는 '~하지 않으면'이라는 조건을 이어주는 접속사예요."}
+];
+
+let current = 0;
+let score = 0;
+const answered = new Array(quizData.length).fill(null); // stores chosen answer per question
+
+const sentenceEl = document.getElementById('sentence');
+const optionsEl = document.getElementById('options');
+const feedbackEl = document.getElementById('feedback');
+const qnoEl = document.getElementById('qno');
+const qCounterEl = document.getElementById('qCounter');
+const scoreNumEl = document.getElementById('scoreNum');
+const progressFillEl = document.getElementById('progressFill');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const quizCard = document.getElementById('quizCard');
+
+function renderQuestion(){
+  const q = quizData[current];
+  qnoEl.textContent = "QUESTION " + (current+1);
+  qCounterEl.textContent = "문제 " + (current+1) + " / " + quizData.length;
+  sentenceEl.innerHTML = q.s;
+  progressFillEl.style.width = ((current+1)/quizData.length*100) + "%";
+  scoreNumEl.textContent = score;
+
+  optionsEl.innerHTML = "";
+  POS.forEach(p => {
+    const btn = document.createElement('div');
+    btn.className = "opt";
+    btn.textContent = p;
+    btn.onclick = () => selectAnswer(p, btn);
+    optionsEl.appendChild(btn);
+  });
+
+  feedbackEl.className = "feedback";
+  feedbackEl.innerHTML = "";
+
+  const prevChoice = answered[current];
+  if(prevChoice){
+    lockOptions(prevChoice, q.a);
+    showFeedback(prevChoice, q.a, q.e);
+    nextBtn.disabled = (current === quizData.length - 1);
+  } else {
+    nextBtn.disabled = true;
+  }
+  prevBtn.disabled = (current === 0);
+}
+
+function lockOptions(chosen, correct){
+  const opts = optionsEl.querySelectorAll('.opt');
+  opts.forEach(o => {
+    o.classList.add('locked');
+    o.onclick = null;
+    if(o.textContent === correct) o.classList.add('correct');
+    if(o.textContent === chosen && chosen !== correct) o.classList.add('wrong');
+    if(o.textContent !== correct && o.textContent !== chosen) o.classList.add('dim');
+  });
+}
+
+function showFeedback(chosen, correct, explain){
+  const isRight = chosen === correct;
+  feedbackEl.className = "feedback show " + (isRight ? "right" : "wrongbox");
+  feedbackEl.innerHTML =
+    '<div class="tag">' + (isRight ? "✅ 정답이에요!" : "❌ 아쉬워요! 정답은 '" + correct + "'예요.") + '</div>' +
+    explain;
+}
+
+function selectAnswer(chosen, btnEl){
+  if(answered[current] !== null) return;
+  const q = quizData[current];
+  answered[current] = chosen;
+  if(chosen === q.a) score++;
+  lockOptions(chosen, q.a);
+  showFeedback(chosen, q.a, q.e);
+  scoreNumEl.textContent = score;
+  nextBtn.disabled = false;
+
+  if(current === quizData.length - 1){
+    setTimeout(showFinalScreen, 900);
+  }
+}
+
+function showFinalScreen(){
+  const pct = Math.round(score/quizData.length*100);
+  quizCard.innerHTML =
+    '<div class="done">' +
+    '<h2>🎉 100문제를 모두 풀었어요!</h2>' +
+    '<div class="bigscore">' + score + ' / ' + quizData.length + '</div>' +
+    '<div style="color:#8a8496;font-size:14px;">정답률 ' + pct + '%</div>' +
+    '<button class="restart" onclick="restartQuiz()">처음부터 다시 풀기</button>' +
+    '</div>';
+  document.querySelector('.nav').style.display = 'none';
+}
+
+function restartQuiz(){
+  current = 0;
+  score = 0;
+  answered.fill(null);
+  location.reload();
+}
+
+prevBtn.addEventListener('click', () => {
+  if(current > 0){ current--; renderQuestion(); }
+});
+nextBtn.addEventListener('click', () => {
+  if(current < quizData.length - 1){ current++; renderQuestion(); }
+});
+
+renderQuestion();
+</script>
+</body>
+</html>
