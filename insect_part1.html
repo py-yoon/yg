@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>곤충 박사 도전기 - 1부</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #EFEAD9;
+    --paper: #FBF8EF;
+    --ink: #2B3A26;
+    --leaf: #3F7A3E;
+    --leaf-dark: #2C5A2B;
+    --ladybug: #D64550;
+    --honey: #E2A63A;
+    --sky: #3F8FA0;
+    --line: #CFC4A0;
+    --shadow: rgba(43,58,38,0.18);
+  }
+  *{ box-sizing: border-box; }
+  html,body{
+    margin:0; padding:0;
+    background: var(--bg);
+    background-image:
+      repeating-linear-gradient(transparent, transparent 37px, var(--line) 38px);
+    color: var(--ink);
+    font-family: 'Noto Sans KR', sans-serif;
+    min-height:100vh;
+  }
+  .wrap{
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 28px 20px 80px;
+  }
+  header.top{
+    text-align:center;
+    margin-bottom: 22px;
+  }
+  .chapter-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background: var(--leaf);
+    color:#fff;
+    padding: 5px 16px;
+    border-radius: 999px;
+    font-family:'Gaegu', sans-serif;
+    font-weight:700;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 3px 0 var(--leaf-dark);
+  }
+  h1.title{
+    font-family:'Gaegu', sans-serif;
+    font-weight: 700;
+    font-size: 44px;
+    margin: 12px 0 4px;
+    color: var(--ink);
+    position:relative;
+    display:inline-block;
+  }
+  h1.title .u{
+    position:relative;
+    z-index:1;
+  }
+  h1.title::after{
+    content:"";
+    position:absolute;
+    left:2%; right:2%; bottom:6px;
+    height:14px;
+    background: var(--honey);
+    opacity:0.45;
+    z-index:0;
+    transform: rotate(-1deg);
+  }
+  .subtitle{
+    font-size:14px;
+    color:#5c6b52;
+    margin-top:2px;
+  }
+
+  /* Bug jar signature element */
+  .jar-card{
+    background: var(--paper);
+    border-radius: 18px;
+    padding: 16px 18px;
+    box-shadow: 0 4px 14px var(--shadow);
+    display:flex;
+    align-items:center;
+    gap:18px;
+    margin-bottom: 22px;
+    border: 2px solid #e7dfc4;
+  }
+  .jar-svg-box{ flex-shrink:0; width:86px; height:100px; }
+  .jar-info{ flex:1; }
+  .jar-info .label{
+    font-family:'Gaegu', sans-serif;
+    font-size: 18px;
+    font-weight:700;
+    color: var(--ink);
+    margin-bottom:6px;
+  }
+  .progress-track{
+    width:100%;
+    height:12px;
+    background: #e9e2c9;
+    border-radius: 999px;
+    overflow:hidden;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.15);
+  }
+  .progress-fill{
+    height:100%;
+    background: linear-gradient(90deg, var(--leaf), var(--sky));
+    width:0%;
+    transition: width 0.5s ease;
+    border-radius: 999px;
+  }
+  .jar-info .count{
+    font-size:12px;
+    color:#6b7a60;
+    margin-top:6px;
+  }
+
+  /* Question card */
+  .qcard{
+    background: var(--paper);
+    border-radius: 18px;
+    padding: 26px 24px 22px;
+    box-shadow: 0 6px 18px var(--shadow);
+    border: 2px solid #e7dfc4;
+    position: relative;
+    animation: pop 0.35s ease;
+  }
+  @keyframes pop{
+    from{ opacity:0; transform: translateY(8px) scale(0.99); }
+    to{ opacity:1; transform: translateY(0) scale(1); }
+  }
+  .qcard::before{
+    content:"";
+    position:absolute;
+    top:0; left:26px;
+    width: 34px; height:14px;
+    background: var(--honey);
+    border-radius: 0 0 6px 6px;
+    opacity:0.85;
+  }
+  .qmeta{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom: 14px;
+  }
+  .qnum{
+    font-family:'Gaegu', sans-serif;
+    font-size: 20px;
+    font-weight:700;
+    color: var(--ink);
+  }
+  .level-chip{
+    font-family:'Gaegu', sans-serif;
+    font-weight:700;
+    font-size:14px;
+    color:#fff;
+    padding: 4px 12px;
+    border-radius: 999px;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.15);
+  }
+  .qtext{
+    font-size: 19px;
+    font-weight:500;
+    line-height:1.55;
+    margin-bottom: 20px;
+    color: var(--ink);
+  }
+  .qtext .bug-icon{ font-size:20px; margin-right:6px; }
+
+  .options{
+    display:grid;
+    gap: 10px;
+  }
+  .opt{
+    text-align:left;
+    background: #fff;
+    border: 2px solid #e2d9bd;
+    border-radius: 12px;
+    padding: 13px 16px;
+    font-size: 15.5px;
+    font-family:'Noto Sans KR', sans-serif;
+    color: var(--ink);
+    cursor:pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease, border-color 0.12s ease;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .opt .opt-letter{
+    width:24px; height:24px;
+    border-radius:50%;
+    background: #f1ead6;
+    color:var(--ink);
+    font-weight:700;
+    font-size:13px;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .opt:hover:not(.locked){
+    border-color: var(--sky);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(63,143,160,0.18);
+  }
+  .opt.correct{
+    background: #eaf6e8;
+    border-color: var(--leaf);
+    color: var(--leaf-dark);
+    font-weight:700;
+  }
+  .opt.correct .opt-letter{ background: var(--leaf); color:#fff; }
+  .opt.wrong{
+    background: #fdecec;
+    border-color: var(--ladybug);
+    color: #9c2c34;
+  }
+  .opt.wrong .opt-letter{ background: var(--ladybug); color:#fff; }
+  .opt.locked{ cursor:default; }
+  .opt.dim{ opacity:0.55; }
+
+  .feedback{
+    margin-top: 16px;
+    padding: 12px 15px;
+    border-radius: 10px;
+    font-size: 14.5px;
+    line-height:1.5;
+    display:none;
+  }
+  .feedback.show{ display:block; animation: pop 0.3s ease; }
+  .feedback.ok{ background:#eaf6e8; color:#2C5A2B; border-left:4px solid var(--leaf); }
+  .feedback.no{ background:#fdecec; color:#9c2c34; border-left:4px solid var(--ladybug); }
+
+  .nav-row{
+    display:flex;
+    justify-content:flex-end;
+    margin-top:18px;
+  }
+  .next-btn{
+    font-family:'Gaegu', sans-serif;
+    font-weight:700;
+    font-size:16px;
+    background: var(--ink);
+    color:#fff;
+    border:none;
+    padding: 10px 22px;
+    border-radius: 999px;
+    cursor:pointer;
+    box-shadow: 0 3px 0 #16210f;
+    opacity:0;
+    pointer-events:none;
+    transition: opacity 0.2s ease;
+  }
+  .next-btn.show{ opacity:1; pointer-events:auto; }
+  .next-btn:active{ transform: translateY(2px); box-shadow:none; }
+
+  /* Result screen */
+  .result{
+    background: var(--paper);
+    border-radius: 18px;
+    padding: 36px 28px;
+    text-align:center;
+    box-shadow: 0 6px 18px var(--shadow);
+    border: 2px solid #e7dfc4;
+    display:none;
+  }
+  .result.show{ display:block; animation: pop 0.4s ease; }
+  .result .rank-emoji{ font-size: 56px; }
+  .result h2{
+    font-family:'Gaegu', sans-serif;
+    font-size: 30px;
+    margin: 6px 0 4px;
+    color: var(--ink);
+  }
+  .result .score-big{
+    font-family:'Gaegu', sans-serif;
+    font-size: 22px;
+    color: var(--leaf-dark);
+    margin-bottom: 10px;
+  }
+  .result p.desc{
+    font-size:14.5px;
+    color:#5c6b52;
+    max-width: 460px;
+    margin: 0 auto 20px;
+    line-height:1.6;
+  }
+  .retry-btn{
+    font-family:'Gaegu', sans-serif;
+    font-weight:700;
+    font-size:16px;
+    background: var(--sky);
+    color:#fff;
+    border:none;
+    padding: 11px 26px;
+    border-radius: 999px;
+    cursor:pointer;
+    box-shadow: 0 3px 0 #2a6673;
+  }
+  .retry-btn:active{ transform: translateY(2px); box-shadow:none; }
+
+  footer.note{
+    text-align:center;
+    font-size:12px;
+    color:#8a8264;
+    margin-top: 26px;
+  }
+
+  @media (max-width: 480px){
+    h1.title{ font-size: 32px; }
+    .qtext{ font-size:17px; }
+    .jar-card{ padding:12px 14px; gap:12px; }
+    .jar-svg-box{ width:64px; height:76px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <span class="chapter-tag">🐞 1부 / 10부</span>
+    <h1 class="title"><span class="u">곤충 박사 도전기</span></h1>
+    <div class="subtitle">Lv.1부터 Lv.10까지, 30문제로 곤충 박사에 도전해보세요!</div>
+  </header>
+
+  <div class="jar-card">
+    <div class="jar-svg-box">
+      <svg id="jarSvg" viewBox="0 0 86 100" xmlns="http://www.w3.org/2000/svg">
+        <rect x="18" y="4" width="50" height="10" rx="3" fill="#B7AE8E"/>
+        <path d="M14 18 h58 v66 a10 10 0 0 1 -10 10 h-38 a10 10 0 0 1 -10 -10 z"
+              fill="#EAF3F1" stroke="#9FB8B2" stroke-width="2"/>
+        <clipPath id="jarClip">
+          <path d="M14 18 h58 v66 a10 10 0 0 1 -10 10 h-38 a10 10 0 0 1 -10 -10 z"/>
+        </clipPath>
+        <g clip-path="url(#jarClip)">
+          <rect id="jarWater" x="14" y="94" width="58" height="0" fill="#DCEFD8"/>
+          <g id="bugsGroup"></g>
+        </g>
+      </svg>
+    </div>
+    <div class="jar-info">
+      <div class="label">채집 유리병</div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="count" id="progressCount">0 / 30 문제 완료 · 0마리 채집</div>
+    </div>
+  </div>
+
+  <div id="quizArea"></div>
+
+  <div class="result" id="resultCard">
+    <div class="rank-emoji" id="rankEmoji">🏆</div>
+    <h2 id="rankTitle">칭호</h2>
+    <div class="score-big" id="scoreBig">0 / 30점</div>
+    <p class="desc" id="rankDesc">설명</p>
+    <button class="retry-btn" onclick="restartQuiz()">다시 도전하기</button>
+  </div>
+
+  <footer class="note">곤충 박사 도전기 · 1부 (Lv.1~10 혼합, 총 30문제) · 2부에서 계속됩니다 🦋</footer>
+</div>
+
+<script>
+const questions = [
+  // Level 1
+  {level:1, icon:"🐜", q:"곤충의 다리는 모두 몇 개일까요?", opts:["4개","6개","8개","10개"], answer:1, exp:"곤충은 다리가 6개예요. 다리가 8개면 거미처럼 곤충이 아닌 친구랍니다!"},
+  {level:1, icon:"🦋", q:"나비가 되기 전, 알에서 태어난 곤충을 무엇이라고 부를까요?", opts:["번데기","애벌레","성충","유충과 애벌레는 같은 말"], answer:1, exp:"알에서 나온 곤충은 '애벌레'라고 불러요. 애벌레는 자라서 번데기를 거쳐 나비가 돼요."},
+  {level:1, icon:"🐝", q:"꿀벌이 꽃에서 모아오는 달콤한 것은 무엇일까요?", opts:["설탕","꿀","잼","우유"], answer:1, exp:"꿀벌은 꽃의 꿀을 모아서 벌집에 저장해요. 그게 바로 우리가 먹는 꿀이에요."},
+  // Level 2
+  {level:2, icon:"🐛", q:"곤충의 몸은 크게 몇 부분으로 나뉠까요?", opts:["2부분","3부분","4부분","5부분"], answer:1, exp:"곤충의 몸은 머리, 가슴, 배 이렇게 3부분으로 나뉘어요."},
+  {level:2, icon:"🐜", q:"개미들이 함께 모여 사는 집을 무엇이라고 할까요?", opts:["둥지","개미집","벌집","거미줄"], answer:1, exp:"개미는 땅속이나 나무 속에 '개미집'을 만들고 여러 마리가 함께 살아요."},
+  {level:2, icon:"🦗", q:"여름에 나무에서 '맴맴' 소리를 크게 내는 곤충은 무엇일까요?", opts:["매미","메뚜기","잠자리","무당벌레"], answer:0, exp:"매미 수컷이 배에 있는 특별한 기관으로 큰 소리를 내서 짝을 찾아요."},
+  // Level 3
+  {level:3, icon:"🪰", q:"잠자리처럼 작은 낱눈이 아주 많이 모여 있는 눈을 무엇이라고 부를까요?", opts:["홑눈","겹눈","외눈","야간눈"], answer:1, exp:"잠자리의 눈은 수천 개의 낱눈이 모인 '겹눈'이라서 아주 넓은 범위를 볼 수 있어요."},
+  {level:3, icon:"🐞", q:"무당벌레의 화려한 빨간색과 점무늬는 주로 어떤 역할을 할까요?", opts:["짝을 유혹하려고","천적에게 위험하다고 경고하려고","체온을 조절하려고","먹이를 유인하려고"], answer:1, exp:"무당벌레는 독한 액을 뿜을 수 있어서, 화려한 무늬로 '나는 위험해!'라고 천적에게 경고해요."},
+  {level:3, icon:"🐛", q:"곤충이 숨을 쉬기 위해 몸 옆쪽에 가지고 있는 작은 구멍을 무엇이라고 할까요?", opts:["콧구멍","숨구멍(기공)","아가미","허파"], answer:1, exp:"곤충은 코가 아니라 배 옆면에 있는 작은 숨구멍(기문)으로 공기를 받아들여요."},
+  // Level 4
+  {level:4, icon:"🦋", q:"'알 → 애벌레 → 번데기 → 성충'의 순서로 자라는 것을 무엇이라고 할까요?", opts:["불완전탈바꿈","완전탈바꿈","반탈바꿈","무변태"], answer:1, exp:"나비, 벌, 딱정벌레처럼 번데기 단계를 거치는 성장을 '완전탈바꿈'이라고 해요."},
+  {level:4, icon:"🦗", q:"메뚜기처럼 번데기 단계 없이 '알 → 애벌레 → 성충'으로 자라는 것을 무엇이라 할까요?", opts:["완전탈바꿈","불완전탈바꿈","이중탈바꿈","무탈바꿈"], answer:1, exp:"메뚜기, 잠자리, 노린재 등은 번데기 단계가 없이 자라는 '불완전탈바꿈' 곤충이에요."},
+  {level:4, icon:"🐜", q:"곤충의 머리에 있는 긴 더듬이는 주로 어떤 역할을 할까요?", opts:["날씨를 예측한다","냄새와 촉감을 느낀다","소리를 크게 낸다","빛을 만든다"], answer:1, exp:"더듬이는 냄새를 맡고 주변을 더듬어 느끼는, 곤충의 아주 중요한 감각 기관이에요."},
+  // Level 5
+  {level:5, icon:"🐜", q:"개미가 먹이가 있는 길을 다른 개미에게 알려줄 때 땅에 남기는 화학 물질은 무엇일까요?", opts:["침","페로몬","꿀","이슬"], answer:1, exp:"개미는 '페로몬'이라는 냄새 물질을 남겨서 동료에게 길을 알려줘요."},
+  {level:5, icon:"🐛", q:"흰개미는 이름에 '개미'가 들어가지만, 사실 어떤 곤충에 더 가까울까요?", opts:["나비","바퀴벌레 무리","벌","잠자리"], answer:1, exp:"흰개미는 생김새는 개미 같지만 분류학적으로는 바퀴벌레와 더 가까운 무리예요."},
+  {level:5, icon:"🪲", q:"지금까지 알려진 곤충 중에서 가장 많은 종류를 가진 무리는 무엇일까요?", opts:["나비목(나비, 나방)","딱정벌레목","벌목","파리목"], answer:1, exp:"딱정벌레목(갑충)은 알려진 곤충 종류 중 가장 큰 무리로, 전체 곤충의 약 4분의 1을 차지해요."},
+  // Level 6
+  {level:6, icon:"🦗", q:"매미의 애벌레는 어른 매미가 되기 전까지 어디에서 오랫동안 지낼까요?", opts:["나무 위","물속","땅속","꽃 속"], answer:2, exp:"매미 애벌레는 땅속에서 나무 뿌리의 즙을 빨아먹으며 몇 년씩 지내다가 땅 위로 올라와요."},
+  {level:6, icon:"🦋", q:"나비와 나방을 구분하는 특징으로 알맞은 것은 무엇일까요?", opts:["나비는 모두 날개가 없다","나방은 대체로 밤에 활동한다","나비는 애벌레 시절이 없다","나방은 곤충이 아니다"], answer:1, exp:"일반적으로 나방은 밤에 활동하고 더듬이 모양도 나비와 다른 경우가 많아요."},
+  {level:6, icon:"🪲", q:"곤충의 딱딱한 겉껍질(외골격)은 주로 무엇으로 이루어져 있을까요?", opts:["칼슘","키틴질","철분","지방"], answer:1, exp:"곤충의 외골격은 '키틴질'이라는 단단한 물질로 되어 있어서 몸을 보호해줘요."},
+  // Level 7
+  {level:7, icon:"🐝", q:"벌집이 육각형 모양으로 이루어진 가장 큰 이유는 무엇일까요?", opts:["보기에 예뻐서","가장 튼튼하고 재료를 절약할 수 있어서","여왕벌이 좋아해서","우연히 그렇게 되어서"], answer:1, exp:"육각형은 빈틈없이 이어 붙일 수 있으면서 재료(밀랍)를 가장 적게 쓰고도 튼튼한 구조예요."},
+  {level:7, icon:"🪳", q:"곤충이 지구에 처음 나타난 시기는 대략 언제로 알려져 있을까요?", opts:["약 40만 년 전","약 400만 년 전","약 4억 년 전","약 40억 년 전"], answer:2, exp:"곤충은 공룡보다도 훨씬 오래전인 약 4억 년 전부터 지구에 살았던 것으로 알려져 있어요."},
+  {level:7, icon:"🐜", q:"개미 사회에서 여왕개미가 하는 가장 중요한 역할은 무엇일까요?", opts:["먹이를 구해온다","알을 낳는다","적을 공격한다","집을 짓는다"], answer:1, exp:"여왕개미는 평생 알을 낳는 일을 맡고, 먹이 구하기나 집짓기는 일개미들이 담당해요."},
+  // Level 8
+  {level:8, icon:"📖", q:"곤충을 오랫동안 관찰하며 유명한 책 「곤충기」를 쓴 프랑스의 곤충학자는 누구일까요?", opts:["다윈","파브르","린네","멘델"], answer:1, exp:"장 앙리 파브르는 평생 곤충을 관찰한 기록을 모아 「파브르 곤충기」를 남겼어요."},
+  {level:8, icon:"🩸", q:"곤충의 몸속을 흐르는 체액(피)은 대개 어떤 특징이 있을까요?", opts:["우리 피처럼 진한 빨간색이다","대부분 색이 옅거나 노르스름하다","항상 파란색이다","피가 아예 없다"], answer:1, exp:"곤충의 체액에는 사람 피처럼 헤모글로빈이 없어서 대부분 색이 옅거나 연한 노란빛이에요."},
+  {level:8, icon:"✨", q:"반딧불이가 배 끝에서 빛을 내는 가장 중요한 이유는 무엇일까요?", opts:["체온을 높이려고","짝을 찾기 위한 신호를 보내려고","적을 놀라게 하려고","길을 밝히려고"], answer:1, exp:"반딧불이는 자신만의 빛 신호로 같은 종의 짝을 찾는 데 이 불빛을 사용해요."},
+  // Level 9
+  {level:9, icon:"❤️", q:"곤충의 심장은 우리 몸과 달리 주로 어느 쪽에 길게 자리 잡고 있을까요?", opts:["머리 안쪽","등 쪽을 따라 길게","다리 속","날개 속"], answer:1, exp:"곤충의 심장은 등 쪽을 따라 관처럼 길게 뻗어 있으며, 이를 '배관'이라고도 불러요."},
+  {level:9, icon:"🔤", q:"생물의 이름을 '속명 + 종소명' 두 단어로 짓는 방법을 무엇이라고 할까요?", opts:["삼명법","이명법","한자 명명법","숫자 명명법"], answer:1, exp:"스웨덴의 학자 린네가 만든 '이명법'은 오늘날에도 모든 생물의 학명을 짓는 기본 방법이에요."},
+  {level:9, icon:"🏋️", q:"세계에서 가장 무거운 곤충 중 하나로 알려진 딱정벌레는 무엇일까요?", opts:["장수풍뎅이","골리앗 딱정벌레","사슴벌레","무당벌레"], answer:1, exp:"아프리카에 사는 골리앗 딱정벌레는 유충일 때 무게가 100g에 가까울 정도로 무거워요."},
+  // Level 10
+  {level:10, icon:"🧬", q:"곤충(Insecta)이 속해 있는 더 큰 동물 분류 무리(문)는 무엇일까요?", opts:["척삭동물문","연체동물문","절지동물문","환형동물문"], answer:2, exp:"곤충은 다리와 몸에 마디가 있는 동물들이 속한 '절지동물문'에 포함돼요."},
+  {level:10, icon:"🌍", q:"지금까지 학계에 이름이 붙여진 곤충 종은 대략 몇 종이 넘을까요?", opts:["약 1만 종","약 10만 종","약 100만 종","약 100종"], answer:2, exp:"현재까지 알려진 곤충만 약 100만 종이 넘고, 아직 발견되지 않은 종도 훨씬 많을 것으로 추정돼요."},
+  {level:10, icon:"🪲", q:"딱정벌레목(갑충류)을 나타내는 학명은 무엇일까요?", opts:["Lepidoptera","Coleoptera","Hymenoptera","Diptera"], answer:1, exp:"딱딱한 겉날개를 뜻하는 그리스어에서 유래한 'Coleoptera'가 딱정벌레목의 학명이에요."},
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+
+const quizArea = document.getElementById('quizArea');
+const progressFill = document.getElementById('progressFill');
+const progressCount = document.getElementById('progressCount');
+const bugsGroup = document.getElementById('bugsGroup');
+const jarWater = document.getElementById('jarWater');
+const resultCard = document.getElementById('resultCard');
+
+function levelColor(lv){
+  // green (easy) -> honey -> ladybug red (hard)
+  if(lv <= 3) return '#3F7A3E';
+  if(lv <= 6) return '#3F8FA0';
+  if(lv <= 8) return '#E2A63A';
+  return '#D64550';
+}
+
+function renderQuestion(){
+  const q = questions[current];
+  const total = questions.length;
+  let optsHtml = '';
+  const letters = ['A','B','C','D'];
+  q.opts.forEach((opt, i) => {
+    optsHtml += `<button class="opt" data-idx="${i}" onclick="selectOption(${i})">
+      <span class="opt-letter">${letters[i]}</span><span>${opt}</span>
+    </button>`;
+  });
+
+  quizArea.innerHTML = `
+    <div class="qcard">
+      <div class="qmeta">
+        <span class="qnum">문제 ${current+1} / ${total}</span>
+        <span class="level-chip" style="background:${levelColor(q.level)}">Lv.${q.level}</span>
+      </div>
+      <div class="qtext"><span class="bug-icon">${q.icon}</span>${q.q}</div>
+      <div class="options" id="optionsBox">${optsHtml}</div>
+      <div class="feedback" id="feedbackBox"></div>
+      <div class="nav-row">
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">${current === total-1 ? '결과 보기 🏆' : '다음 문제 →'}</button>
+      </div>
+    </div>
+  `;
+  answered = false;
+  updateProgress();
+}
+
+function selectOption(i){
+  if(answered) return;
+  answered = true;
+  const q = questions[current];
+  const buttons = document.querySelectorAll('#optionsBox .opt');
+  buttons.forEach((b, idx) => {
+    b.classList.add('locked');
+    if(idx === q.answer){ b.classList.add('correct'); }
+    if(idx === i && i !== q.answer){ b.classList.add('wrong'); }
+    if(idx !== q.answer && idx !== i){ b.classList.add('dim'); }
+  });
+
+  const fb = document.getElementById('feedbackBox');
+  if(i === q.answer){
+    score++;
+    fb.className = 'feedback ok show';
+    fb.innerHTML = `🎉 정답이에요! ${q.exp}`;
+    addBugToJar();
+  } else {
+    fb.className = 'feedback no show';
+    fb.innerHTML = `❌ 아쉬워요. ${q.exp}`;
+  }
+  document.getElementById('nextBtn').classList.add('show');
+  updateProgress();
+}
+
+function nextQuestion(){
+  if(current < questions.length - 1){
+    current++;
+    renderQuestion();
+    window.scrollTo({top: 0, behavior:'smooth'});
+  } else {
+    showResult();
+  }
+}
+
+function updateProgress(){
+  const total = questions.length;
+  const doneCount = current + (answered ? 1 : 0);
+  const pct = Math.min(100, Math.round((doneCount/total)*100));
+  progressFill.style.width = pct + '%';
+  progressCount.textContent = `${doneCount} / ${total} 문제 완료 · ${score}마리 채집`;
+}
+
+function addBugToJar(){
+  const bugEmojis = ['🐞','🐜','🦋','🐝','🦗'];
+  const idx = score - 1;
+  const cols = 5;
+  const x = 20 + (idx % cols) * 11;
+  const y = 88 - Math.floor(idx / cols) * 13;
+  const emoji = bugEmojis[idx % bugEmojis.length];
+  const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  t.setAttribute('x', x);
+  t.setAttribute('y', Math.max(24, y));
+  t.setAttribute('font-size', '10');
+  t.textContent = emoji;
+  bugsGroup.appendChild(t);
+
+  const waterHeight = Math.min(74, score * 2.4);
+  jarWater.setAttribute('y', 84 - waterHeight);
+  jarWater.setAttribute('height', waterHeight);
+}
+
+function showResult(){
+  quizArea.innerHTML = '';
+  const total = questions.length;
+  let rank, emoji, desc;
+  if(score >= 27){
+    rank = '전설의 곤충 박사 🎓'; emoji = '🏆';
+    desc = '와, 정말 대단해요! 곤충에 대해 모르는 게 없는 진짜 박사님이에요. 2부에서 더 어려운 문제로 만나요!';
+  } else if(score >= 20){
+    rank = '곤충 연구원 🔬'; emoji = '🥇';
+    desc = '곤충 지식이 아주 풍부하네요! 조금만 더 공부하면 완벽한 박사님이 될 수 있어요.';
+  } else if(score >= 12){
+    rank = '곤충 탐험가 🧭'; emoji = '🥈';
+    desc = '곤충에 대해 꽤 많이 알고 있어요! 틀린 문제의 설명을 다시 읽어보면 더 실력이 늘 거예요.';
+  } else {
+    rank = '곤충 채집가 새싹 🌱'; emoji = '🥉';
+    desc = '이제 막 곤충 박사의 길에 들어섰어요! 다시 도전하면서 하나씩 배워가 봐요.';
+  }
+  document.getElementById('rankEmoji').textContent = emoji;
+  document.getElementById('rankTitle').textContent = rank;
+  document.getElementById('scoreBig').textContent = `${score} / ${total}점`;
+  document.getElementById('rankDesc').textContent = desc;
+  resultCard.classList.add('show');
+  progressCount.textContent = `${total} / ${total} 문제 완료 · ${score}마리 채집`;
+}
+
+function restartQuiz(){
+  current = 0; score = 0; answered = false;
+  bugsGroup.innerHTML = '';
+  jarWater.setAttribute('height', 0);
+  jarWater.setAttribute('y', 94);
+  resultCard.classList.remove('show');
+  renderQuestion();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+renderQuestion();
+</script>
+</body>
+</html>
