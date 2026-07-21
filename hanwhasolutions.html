@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>한화솔루션 유상증자 수익률 계산기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css"></script>
+<style>
+  :root{
+    --paper:#faf7f2;
+    --card:#ffffff;
+    --ink:#1c2130;
+    --ink-soft:#565c6b;
+    --line:#e7e1d6;
+    --line-strong:#d8d0c1;
+    --orange:#ff6a13;
+    --orange-deep:#c9500a;
+    --orange-wash:#fff1e6;
+    --green:#1f7a4d;
+    --green-wash:#eaf6ef;
+    --navy:#12172a;
+    --gain:#e0303f;
+    --gain-wash:#fdeaec;
+    --loss:#2f6fed;
+    --loss-wash:#eaf1fd;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Pretendard', -apple-system, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .num{ font-family:'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; }
+  .display{ font-family:'Fraunces', serif; }
+
+  .wrap{ max-width:880px; margin:0 auto; padding:0 20px 80px; }
+
+  header{
+    padding:56px 0 40px;
+    border-bottom:1px solid var(--line);
+  }
+  .eyebrow{
+    display:flex; align-items:center; gap:10px;
+    font-size:13px; font-weight:600; color:var(--orange-deep);
+    letter-spacing:.02em; margin-bottom:18px;
+  }
+  .eyebrow .dot{ width:6px; height:6px; border-radius:50%; background:var(--orange); }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:38px;
+    line-height:1.25;
+    margin:0 0 14px;
+    letter-spacing:-.01em;
+  }
+  h1 span{ color:var(--orange-deep); }
+  .sub{
+    font-size:15.5px; color:var(--ink-soft); line-height:1.7; max-width:560px;
+  }
+  .code-tag{
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px;
+    background:var(--navy); color:#fff; padding:2px 8px; border-radius:4px;
+    margin-left:2px;
+  }
+
+  .timeline-section{ padding:36px 0 8px; }
+  .timeline-title{ font-size:13px; font-weight:600; color:var(--ink-soft); margin-bottom:18px; text-transform:uppercase; letter-spacing:.06em;}
+  .timeline{
+    position:relative;
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:0;
+  }
+  .timeline::before{
+    content:"";
+    position:absolute; top:9px; left:4%; right:4%;
+    height:2px; background:var(--line-strong);
+    z-index:0;
+  }
+  .t-step{ position:relative; z-index:1; text-align:center; padding:0 3px; }
+  .t-dot{
+    width:18px; height:18px; border-radius:50%;
+    background:#fff; border:2px solid var(--line-strong);
+    margin:0 auto 12px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .t-step.done .t-dot{ background:var(--green); border-color:var(--green); }
+  .t-step.done .t-dot::after{ content:"✓"; color:#fff; font-size:10px; font-weight:700; }
+  .t-step.today .t-dot{ background:var(--orange); border-color:var(--orange); box-shadow:0 0 0 4px var(--orange-wash); }
+  .t-step.today .t-dot::after{ content:""; width:6px;height:6px;border-radius:50%;background:#fff; }
+  .t-label{ font-size:12px; font-weight:600; color:var(--ink); line-height:1.4; }
+  .t-date{ font-size:11px; color:var(--ink-soft); margin-top:2px; font-family:'IBM Plex Mono',monospace; }
+  .t-step.today .t-label{ color:var(--orange-deep); }
+  .t-tag{
+    display:inline-block; margin-top:6px; font-size:10px; font-weight:700;
+    padding:2px 6px; border-radius:10px;
+  }
+  .t-step.done .t-tag{ color:var(--green); background:var(--green-wash); }
+  .t-step.today .t-tag{ color:var(--orange-deep); background:var(--orange-wash); }
+
+  .stats{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+    background:var(--line); border:1px solid var(--line);
+    border-radius:12px; overflow:hidden; margin:36px 0 0;
+  }
+  .stat{ background:var(--card); padding:18px 16px; }
+  .stat .k{ font-size:11.5px; color:var(--ink-soft); margin-bottom:8px; }
+  .stat .v{ font-family:'Fraunces',serif; font-size:21px; font-weight:600; }
+  .stat .v small{ font-size:12px; font-weight:400; color:var(--ink-soft); font-family:'Pretendard'; }
+
+  .panel{
+    margin-top:44px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:32px;
+  }
+  .panel-title{ font-size:19px; font-weight:700; margin:0 0 6px; }
+  .panel-desc{ font-size:13.5px; color:var(--ink-soft); margin:0 0 26px; line-height:1.6; }
+
+  .field-group{
+    border:1px solid var(--line); border-radius:12px; padding:18px 20px; margin-bottom:16px;
+  }
+  .field-group.accent{ border-color:#ffd3ad; background:linear-gradient(180deg,var(--orange-wash),#fff 60%); }
+  .field-group.locked{ background:#f6f3ec; }
+  .fg-title{ font-size:13px; font-weight:700; color:var(--orange-deep); margin-bottom:14px; display:flex; align-items:center; gap:6px;}
+  .fg-title .n{ width:18px; height:18px; border-radius:5px; background:var(--orange); color:#fff; font-size:11px; display:flex; align-items:center; justify-content:center; font-weight:700; }
+  .fg-title.locked-title{ color:var(--ink-soft); }
+  .fg-title.locked-title .n{ background:var(--ink-soft); }
+
+  label{ display:block; font-size:13.5px; font-weight:600; margin-bottom:6px; }
+  .hint{ font-size:11.5px; color:var(--ink-soft); margin:-2px 0 8px; }
+  .row{ display:flex; gap:10px; }
+  input[type=number]{
+    width:100%; padding:11px 12px; border:1px solid var(--line-strong); border-radius:8px;
+    font-size:16px; font-family:'IBM Plex Mono',monospace; background:#fff; color:var(--ink);
+  }
+  input[disabled]{ background:#eee9de; color:var(--ink-soft); font-weight:600; }
+  input:focus{ outline:none; border-color:var(--orange); box-shadow:0 0 0 3px var(--orange-wash); }
+  .btn-fetch{
+    white-space:nowrap; padding:0 16px; border:none; border-radius:8px;
+    background:var(--navy); color:#fff; font-size:13px; font-weight:600; cursor:pointer;
+  }
+  .btn-fetch:hover{ background:#232a45; }
+  .status{ font-size:12px; margin-top:8px; min-height:14px; }
+  .status.ok{ color:var(--green); }
+  .status.wait{ color:var(--ink-soft); }
+  .status.err{ color:#b3392a; }
+
+  .btn-calc{
+    width:100%; padding:15px; margin-top:6px; border:none; border-radius:10px;
+    background:var(--orange); color:#fff; font-size:15.5px; font-weight:700; cursor:pointer;
+    transition:background .15s;
+  }
+  .btn-calc:hover{ background:var(--orange-deep); }
+
+  .result{ margin-top:32px; }
+  .compare{
+    display:flex; align-items:stretch; gap:10px; margin-bottom:26px;
+  }
+  .compare-col{
+    flex:1; border:1px solid var(--line); border-radius:12px; padding:16px; text-align:center; position:relative;
+  }
+  .compare-col .lab{ font-size:12px; color:var(--ink-soft); margin-bottom:8px; }
+  .compare-col .amt{ font-family:'Fraunces',serif; font-size:22px; font-weight:600; }
+  .vs{ display:flex; align-items:center; justify-content:center; font-size:12px; color:var(--ink-soft); font-weight:700; width:24px;}
+
+  .pl-box{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:22px 24px; border-radius:12px;
+    background:var(--navy); color:#fff; margin-bottom:16px;
+    transition:background .2s;
+  }
+  .pl-box.gain{ background:linear-gradient(135deg,#3a0f14,#1c2130); }
+  .pl-box.loss{ background:linear-gradient(135deg,#0f1f3a,#1c2130); }
+  .pl-box .lab{ font-size:13px; color:#b9bdd0; margin-bottom:6px; }
+  .pl-box .amt{ font-family:'Fraunces',serif; font-size:30px; font-weight:600; }
+  .pl-box .amt.gain{ color:#ff8a94; }
+  .pl-box .amt.loss{ color:#8ab4ff; }
+  .pl-box .note{ font-size:11.5px; color:#9198b0; margin-top:4px; }
+
+  .rate-box{
+    text-align:center; padding:22px; border-radius:12px;
+    border:1.5px dashed var(--line-strong); background:#faf9f6;
+  }
+  .rate-box.gain{ border-color:var(--gain); background:var(--gain-wash); }
+  .rate-box.loss{ border-color:var(--loss); background:var(--loss-wash); }
+  .rate-box .lab{ font-size:13px; font-weight:600; margin-bottom:8px; color:var(--ink-soft); }
+  .rate-box .amt{ font-family:'Fraunces',serif; font-size:34px; font-weight:700; color:var(--ink); }
+  .rate-box.gain .lab, .rate-box.gain .amt{ color:var(--gain); }
+  .rate-box.loss .lab, .rate-box.loss .amt{ color:var(--loss); }
+
+  footer{
+    margin-top:40px; padding-top:22px; border-top:1px solid var(--line);
+    font-size:12px; color:var(--ink-soft); line-height:1.7;
+  }
+  footer b{ color:var(--ink); }
+
+  @media (max-width:640px){
+    h1{ font-size:29px; }
+    .stats{ grid-template-columns:repeat(2,1fr); }
+    .timeline{ grid-template-columns:repeat(3,1fr); row-gap:22px; }
+    .timeline::before{ display:none; }
+    .compare{ flex-direction:column; }
+    .vs{ display:none; }
+    .panel{ padding:22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow"><span class="dot"></span>HANWHA SOLUTIONS &nbsp;·&nbsp; 유상증자 수익률</div>
+    <h1>확정 발행가액 22,100원<br><span>수익률 계산기</span></h1>
+    <p class="sub">
+      한화솔루션<span class="code-tag">009830</span> 유상증자 최종 발행가액은
+      <b>22,100원</b>으로 확정되었습니다. 청약(보유) 주식수와 현재가를 입력하면
+      현재 기준 평가손익과 수익률을 바로 확인할 수 있습니다.
+    </p>
+  </header>
+
+  <section class="timeline-section">
+    <div class="timeline-title">유상증자 진행 일정</div>
+    <div class="timeline">
+      <div class="t-step done">
+        <div class="t-dot"></div>
+        <div class="t-label">1차 발행가액<br>확정</div>
+        <div class="t-date">06.11</div>
+        <div class="t-tag">27,900원</div>
+      </div>
+      <div class="t-step done">
+        <div class="t-dot"></div>
+        <div class="t-label">최종(2차)<br>발행가액 확정</div>
+        <div class="t-date">07.16</div>
+        <div class="t-tag">22,100원</div>
+      </div>
+      <div class="t-step today">
+        <div class="t-dot"></div>
+        <div class="t-label">구주주<br>청약</div>
+        <div class="t-date">07.22–23</div>
+        <div class="t-tag">D-1 · 오늘 07.21</div>
+      </div>
+      <div class="t-step">
+        <div class="t-dot"></div>
+        <div class="t-label">일반공모<br>청약</div>
+        <div class="t-date">07.27–28</div>
+      </div>
+      <div class="t-step">
+        <div class="t-dot"></div>
+        <div class="t-label">주금<br>납입</div>
+        <div class="t-date">07.30</div>
+      </div>
+      <div class="t-step">
+        <div class="t-dot"></div>
+        <div class="t-label">신주<br>상장</div>
+        <div class="t-date">08.11</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stat"><div class="k">확정 발행가액</div><div class="v">22,100<small> 원</small></div></div>
+    <div class="stat"><div class="k">1차 대비 할인</div><div class="v">20.8<small>%</small></div></div>
+    <div class="stat"><div class="k">신주 발행수</div><div class="v">5,300<small>만주</small></div></div>
+    <div class="stat"><div class="k">총 조달금액</div><div class="v">1조 1,713<small>억원</small></div></div>
+  </section>
+
+  <section class="panel">
+    <h2 class="panel-title">내 수익률 확인하기</h2>
+    <p class="panel-desc">
+      확정 발행가액 22,100원을 기준으로, 보유(청약) 주식수와 현재가를 입력하면
+      평가손익과 수익률을 계산합니다.
+    </p>
+
+    <div class="field-group locked">
+      <div class="fg-title locked-title"><span class="n">🔒</span>확정 발행가액</div>
+      <input type="number" id="finalPrice" value="22100" disabled>
+    </div>
+
+    <div class="field-group">
+      <div class="fg-title" style="color:var(--ink)"><span class="n" style="background:var(--ink)">1</span>청약(보유) 주식수</div>
+      <p class="hint">구주주 1주당 배정비율 약 0.2465주 — 보유 주식수 × 배정비율로 계산해 입력하세요</p>
+      <input type="number" id="shareCount" value="1000">
+    </div>
+
+    <div class="field-group accent">
+      <div class="fg-title"><span class="n">2</span>현재가</div>
+      <div class="row">
+        <input type="number" id="currentPrice" placeholder="현재가 불러오기 또는 직접 입력">
+        <button class="btn-fetch" onclick="fetchCurrentPrice()">현재가 불러오기</button>
+      </div>
+      <div class="status wait" id="fetchStatus">불러오는 중...</div>
+    </div>
+
+    <button class="btn-calc" onclick="calculateReturn()">수익률 계산하기</button>
+
+    <div class="result">
+      <div class="compare">
+        <div class="compare-col"><div class="lab">투자원금</div><div class="amt" id="resPrincipal">— 원</div></div>
+        <div class="vs">→</div>
+        <div class="compare-col"><div class="lab">현재 평가금액</div><div class="amt" id="resCurrentValue">— 원</div></div>
+      </div>
+
+      <div class="pl-box" id="plBox">
+        <div>
+          <div class="lab">평가손익</div>
+          <div class="note" id="resNote">주식수와 현재가를 입력하고 계산 버튼을 눌러주세요</div>
+        </div>
+        <div class="amt" id="resProfit">—</div>
+      </div>
+
+      <div class="rate-box" id="rateBox">
+        <div class="lab">수익률</div>
+        <div class="amt" id="resRate">— %</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <b>참고사항.</b> 이 계산기는 한화솔루션 유상증자 최종 발행가액(22,100원 확정), 신주 발행수(5,300만주) 등
+    공개된 공시 정보를 바탕으로 한 참고용 도구이며, 실제 보유 내역·수수료·세금은 반영되지 않습니다.
+    현재가는 Yahoo Finance 시세(프록시 경유)를 이용하며 실제 KRX 시세와 차이가 있을 수 있습니다.
+    투자 판단의 최종 책임은 본인에게 있으며, 이 페이지는 투자 권유 목적이 아닙니다.
+  </footer>
+
+</div>
+
+<script>
+  window.addEventListener('DOMContentLoaded', fetchCurrentPrice);
+
+  async function fetchCurrentPrice() {
+    const inputField = document.getElementById('currentPrice');
+    const statusText = document.getElementById('fetchStatus');
+
+    statusText.innerText = "현재가를 조회하는 중...";
+    statusText.className = "status wait";
+
+    try {
+      const response = await fetch('https://yahoo-finance-proxy.6h2lo.workers.dev/');
+      if (!response.ok) throw new Error('시세 프록시 응답 오류');
+
+      const data = await response.json();
+      const meta = data.chart.result[0].meta;
+      const currentPrice = meta.regularMarketPrice;
+
+      if (currentPrice) {
+        inputField.value = Math.round(currentPrice);
+        statusText.innerText = "현재가 자동 반영 완료";
+        statusText.className = "status ok";
+      } else {
+        statusText.innerText = "시세 조회 실패 — 값을 직접 입력해 주세요";
+        statusText.className = "status err";
+      }
+
+      calculateReturn();
+    } catch (err) {
+      console.error(err);
+      statusText.innerText = "자동 조회 실패 — 값을 직접 입력해 주세요";
+      statusText.className = "status err";
+    }
+  }
+
+  function calculateReturn() {
+    const finalPrice = 22100;
+    const shareCount = parseFloat(document.getElementById('shareCount').value);
+    const currentPrice = parseFloat(document.getElementById('currentPrice').value);
+
+    if (isNaN(shareCount) || shareCount <= 0) {
+      alert("청약(보유) 주식수를 올바르게 입력해 주세요.");
+      return;
+    }
+    if (isNaN(currentPrice) || currentPrice <= 0) {
+      alert("현재가를 올바르게 입력해 주세요.");
+      return;
+    }
+
+    const principal = finalPrice * shareCount;
+    const currentValue = currentPrice * shareCount;
+    const profit = currentValue - principal;
+    const rate = (profit / principal) * 100;
+    const perShare = currentPrice - finalPrice;
+
+    document.getElementById('resPrincipal').innerText = principal.toLocaleString() + " 원";
+    document.getElementById('resCurrentValue').innerText = currentValue.toLocaleString() + " 원";
+
+    const plBox = document.getElementById('plBox');
+    const rateBox = document.getElementById('rateBox');
+    const resProfit = document.getElementById('resProfit');
+
+    plBox.classList.remove('gain', 'loss');
+    rateBox.classList.remove('gain', 'loss');
+    resProfit.classList.remove('gain', 'loss');
+
+    let noteText = "";
+    if (profit > 0) {
+      plBox.classList.add('gain');
+      rateBox.classList.add('gain');
+      resProfit.classList.add('gain');
+      noteText = `1주당 +${perShare.toLocaleString()}원 (현재가 ${currentPrice.toLocaleString()}원 기준)`;
+    } else if (profit < 0) {
+      plBox.classList.add('loss');
+      rateBox.classList.add('loss');
+      resProfit.classList.add('loss');
+      noteText = `1주당 ${perShare.toLocaleString()}원 (현재가 ${currentPrice.toLocaleString()}원 기준)`;
+    } else {
+      noteText = "발행가액과 현재가가 동일합니다.";
+    }
+
+    resProfit.innerText = (profit >= 0 ? "+" : "") + profit.toLocaleString() + " 원";
+    document.getElementById('resNote').innerText = noteText;
+    document.getElementById('resRate').innerText = (rate >= 0 ? "+" : "") + rate.toFixed(2) + " %";
+  }
+</script>
+
+</body>
+</html>
