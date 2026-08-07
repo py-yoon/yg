@@ -102,6 +102,36 @@
   }
   .t-step.done .t-tag{ color:var(--green); background:var(--green-wash); }
   .t-step.today .t-tag{ color:var(--orange-deep); background:var(--orange-wash); }
+  .t-tag.dyn-tag:empty{ display:none; }
+  .today-inline{ font-size:11px; font-weight:600; color:var(--orange-deep); text-transform:none; letter-spacing:0; margin-left:4px; }
+
+  .preset-buttons{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+  .preset-btn{
+    padding:7px 14px; border-radius:999px; border:1px solid var(--line-strong);
+    background:#fff; color:var(--ink); font-size:13px; font-weight:600; cursor:pointer;
+    font-family:'Pretendard'; transition:all .12s;
+  }
+  .preset-btn:hover{ border-color:var(--orange); color:var(--orange-deep); }
+  .preset-btn.active{ background:var(--orange); border-color:var(--orange); color:#fff; }
+
+  .esop-panel{ background:var(--card); }
+  .esop-countdown{
+    display:flex; align-items:center; gap:26px; flex-wrap:wrap;
+    padding:22px; border-radius:12px; background:linear-gradient(135deg,#0f1f3a,#1c2130);
+  }
+  .esop-dday{
+    font-family:'Fraunces',serif; font-size:38px; font-weight:700; color:#8ab4ff;
+    min-width:120px; text-align:center;
+  }
+  .esop-dday.done{ color:#7fe0a8; }
+  .esop-dates{ flex:1; min-width:220px; }
+  .esop-date-row{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:8px 0; font-size:13px; color:#b9bdd0; border-bottom:1px solid rgba(255,255,255,.1);
+  }
+  .esop-date-row:last-child{ border-bottom:none; }
+  .esop-date-row b{ font-family:'IBM Plex Mono',monospace; color:#fff; font-size:14px; }
+  .esop-note{ font-size:11.5px; color:var(--ink-soft); margin-top:14px; line-height:1.7; }
 
   .stats{
     display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
@@ -227,40 +257,43 @@
   </header>
 
   <section class="timeline-section">
-    <div class="timeline-title">유상증자 진행 일정</div>
-    <div class="timeline">
-      <div class="t-step done">
+    <div class="timeline-title">유상증자 진행 일정 <span id="todayLabel" class="today-inline"></span></div>
+    <div class="timeline" id="timeline">
+      <div class="t-step" id="t-step-1" data-endyear="2026" data-endmonth="6" data-endday="11" data-refyear="2026" data-refmonth="6" data-refday="11">
         <div class="t-dot"></div>
         <div class="t-label">1차 발행가액<br>확정</div>
         <div class="t-date">06.11</div>
-        <div class="t-tag">27,900원</div>
+        <div class="t-tag static-tag">27,900원</div>
       </div>
-      <div class="t-step done">
+      <div class="t-step" id="t-step-2" data-endyear="2026" data-endmonth="7" data-endday="16" data-refyear="2026" data-refmonth="7" data-refday="16">
         <div class="t-dot"></div>
         <div class="t-label">최종(2차)<br>발행가액 확정</div>
         <div class="t-date">07.16</div>
-        <div class="t-tag">22,100원</div>
+        <div class="t-tag static-tag">22,100원</div>
       </div>
-      <div class="t-step today">
+      <div class="t-step" id="t-step-3" data-endyear="2026" data-endmonth="7" data-endday="23" data-refyear="2026" data-refmonth="7" data-refday="22">
         <div class="t-dot"></div>
         <div class="t-label">구주주<br>청약</div>
         <div class="t-date">07.22–23</div>
-        <div class="t-tag">D-1 · 오늘 07.21</div>
+        <div class="t-tag dyn-tag" id="t-tag-3"></div>
       </div>
-      <div class="t-step">
+      <div class="t-step" id="t-step-4" data-endyear="2026" data-endmonth="7" data-endday="28" data-refyear="2026" data-refmonth="7" data-refday="27">
         <div class="t-dot"></div>
         <div class="t-label">일반공모<br>청약</div>
         <div class="t-date">07.27–28</div>
+        <div class="t-tag dyn-tag" id="t-tag-4"></div>
       </div>
-      <div class="t-step">
+      <div class="t-step" id="t-step-5" data-endyear="2026" data-endmonth="7" data-endday="30" data-refyear="2026" data-refmonth="7" data-refday="30">
         <div class="t-dot"></div>
         <div class="t-label">주금<br>납입</div>
         <div class="t-date">07.30</div>
+        <div class="t-tag dyn-tag" id="t-tag-5"></div>
       </div>
-      <div class="t-step">
+      <div class="t-step" id="t-step-6" data-endyear="2026" data-endmonth="8" data-endday="11" data-refyear="2026" data-refmonth="8" data-refday="11">
         <div class="t-dot"></div>
         <div class="t-label">신주<br>상장</div>
         <div class="t-date">08.11</div>
+        <div class="t-tag dyn-tag" id="t-tag-6"></div>
       </div>
     </div>
   </section>
@@ -269,7 +302,7 @@
     <div class="stat"><div class="k">확정 발행가액</div><div class="v">22,100<small> 원</small></div></div>
     <div class="stat"><div class="k">1차 대비 할인</div><div class="v">20.8<small>%</small></div></div>
     <div class="stat"><div class="k">신주 발행수</div><div class="v">5,300<small>만주</small></div></div>
-    <div class="stat"><div class="k">총 조달금액</div><div class="v">1조 1,713<small>억원</small></div></div>
+    <div class="stat"><div class="k">총 조달금액</div><div class="v">1조 1,717<small>억원</small></div></div>
   </section>
 
   <section class="panel">
@@ -288,6 +321,14 @@
       <div class="fg-title" style="color:var(--ink)"><span class="n" style="background:var(--ink)">1</span>청약(보유) 주식수</div>
       <p class="hint">구주주 1주당 배정비율 약 0.2465주 — 보유 주식수 × 배정비율로 계산해 입력하세요</p>
       <input type="number" id="shareCount" value="1000">
+      <div class="preset-buttons" id="presetButtons">
+        <button type="button" class="preset-btn" data-count="1000">1천주</button>
+        <button type="button" class="preset-btn" data-count="2000">2천주</button>
+        <button type="button" class="preset-btn" data-count="3000">3천주</button>
+        <button type="button" class="preset-btn" data-count="4000">4천주</button>
+        <button type="button" class="preset-btn" data-count="5000">5천주</button>
+        <button type="button" class="preset-btn" data-count="10000">1만주</button>
+      </div>
     </div>
 
     <div class="field-group accent">
@@ -323,6 +364,27 @@
     </div>
   </section>
 
+  <section class="panel esop-panel">
+    <h2 class="panel-title">우리사주 보호예수 해제 카운트다운</h2>
+    <p class="panel-desc">
+      이번 유상증자로 우리사주조합에 배정된 신주는 관련 법령(자본시장법 제165조의7, 근로복지기본법 제38조)에 따라
+      한국증권금융에 예탁된 날로부터 1년간 인출·매도가 제한됩니다. 실무상 예탁은 신주 상장(유통개시)일을 기준으로
+      이루어지는 경우가 많아, 아래 날짜는 <b>신주 상장예정일(2026.08.11)</b>을 기산일로 가정한 추정치입니다.
+    </p>
+    <div class="esop-countdown">
+      <div class="esop-dday" id="esopDday">D-365</div>
+      <div class="esop-dates">
+        <div class="esop-date-row"><span>보호예수 시작일 (신주 상장일)</span><b id="esopStart">2026.08.11</b></div>
+        <div class="esop-date-row"><span>매도 가능 예상일 (예수 해제일)</span><b id="esopEnd">2027.08.11</b></div>
+        <div class="esop-date-row"><span>오늘</span><b id="esopToday">—</b></div>
+      </div>
+    </div>
+    <p class="esop-note">
+      실제 예탁일·해제일은 회사 및 우리사주조합 사무국 공지에 따라 며칠 차이가 날 수 있습니다.
+      정확한 해제일은 소속 우리사주조합 또는 한국증권금융을 통해 확인하시기 바랍니다.
+    </p>
+  </section>
+
   <footer>
     <b>참고사항.</b> 이 계산기는 한화솔루션 유상증자 최종 발행가액(22,100원 확정), 신주 발행수(5,300만주) 등
     공개된 공시 정보를 바탕으로 한 참고용 도구이며, 실제 보유 내역·수수료·세금은 반영되지 않습니다.
@@ -333,7 +395,113 @@
 </div>
 
 <script>
-  window.addEventListener('DOMContentLoaded', fetchCurrentPrice);
+  window.addEventListener('DOMContentLoaded', () => {
+    fetchCurrentPrice();
+    updateTimeline();
+    updateEsopCountdown();
+    initPresetButtons();
+  });
+
+  function formatKDate(d){
+    return d.getFullYear() + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + String(d.getDate()).padStart(2,'0');
+  }
+
+  function daysBetween(a, b){
+    const MS = 1000 * 60 * 60 * 24;
+    const a0 = new Date(a.getFullYear(), a.getMonth(), a.getDate());
+    const b0 = new Date(b.getFullYear(), b.getMonth(), b.getDate());
+    return Math.round((b0 - a0) / MS);
+  }
+
+  // 오늘 날짜를 기준으로 각 일정 단계의 완료/진행/예정 상태를 자동 계산
+  function updateTimeline(){
+    const today = new Date();
+    document.getElementById('todayLabel').innerText = '· 오늘 ' + formatKDate(today);
+
+    const steps = document.querySelectorAll('#timeline .t-step');
+    let nextAssigned = false;
+
+    steps.forEach(step => {
+      const endDate = new Date(
+        parseInt(step.dataset.endyear, 10),
+        parseInt(step.dataset.endmonth, 10) - 1,
+        parseInt(step.dataset.endday, 10)
+      );
+      const refDate = new Date(
+        parseInt(step.dataset.refyear, 10),
+        parseInt(step.dataset.refmonth, 10) - 1,
+        parseInt(step.dataset.refday, 10)
+      );
+
+      step.classList.remove('done', 'today');
+      const dynTag = step.querySelector('.dyn-tag');
+
+      if (daysBetween(today, endDate) < 0) {
+        // 종료일이 이미 지난 단계 → 완료
+        step.classList.add('done');
+        if (dynTag) dynTag.innerText = '';
+      } else if (!nextAssigned) {
+        // 아직 지나지 않은 단계 중 가장 가까운 단계 → 진행/예정 하이라이트
+        step.classList.add('today');
+        nextAssigned = true;
+        const d = daysBetween(today, refDate);
+        if (dynTag) {
+          if (d > 0) dynTag.innerText = 'D-' + d;
+          else if (d === 0) dynTag.innerText = 'D-DAY';
+          else dynTag.innerText = '진행중';
+        }
+      } else {
+        if (dynTag) dynTag.innerText = '';
+      }
+    });
+  }
+
+  // 우리사주 보호예수 해제일까지 D-day 카운트다운 (신주 상장일 기준 1년)
+  function updateEsopCountdown(){
+    const start = new Date(2026, 7, 11); // 2026-08-11
+    const end = new Date(2027, 7, 11);   // 2027-08-11 (보호예수 1년 해제)
+    const today = new Date();
+
+    document.getElementById('esopStart').innerText = formatKDate(start);
+    document.getElementById('esopEnd').innerText = formatKDate(end);
+    document.getElementById('esopToday').innerText = formatKDate(today);
+
+    const ddayEl = document.getElementById('esopDday');
+    const d = daysBetween(today, end);
+
+    if (d > 0) {
+      ddayEl.innerText = 'D-' + d;
+      ddayEl.classList.remove('done');
+    } else if (d === 0) {
+      ddayEl.innerText = 'D-DAY';
+      ddayEl.classList.remove('done');
+    } else {
+      ddayEl.innerText = '매도 가능';
+      ddayEl.classList.add('done');
+    }
+  }
+
+  // 1천/2천/3천/4천/5천/1만주 프리셋 버튼
+  function initPresetButtons(){
+    const shareInput = document.getElementById('shareCount');
+    const buttons = document.querySelectorAll('.preset-btn');
+
+    function syncActiveState(){
+      const val = String(parseInt(shareInput.value, 10));
+      buttons.forEach(b => b.classList.toggle('active', b.dataset.count === val));
+    }
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        shareInput.value = btn.dataset.count;
+        syncActiveState();
+        calculateReturn();
+      });
+    });
+
+    shareInput.addEventListener('input', syncActiveState);
+    syncActiveState();
+  }
 
   async function fetchCurrentPrice() {
     const inputField = document.getElementById('currentPrice');
